@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Направления — Университет')"></head>
+<body>
+<th:block th:replace="fragments/layout :: appHeader('directions')"></th:block>
+<main class="page-shell" id="directionsPage">
+    <div class="container">
+        <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+            <div>
+                <p class="section-title mb-1">Справочник</p>
+                <h1 class="h3 fw-bold text-uppercase mb-0">Направления и факультеты</h1>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <button class="btn btn-outline-dark" data-bs-toggle="modal" data-bs-target="#facultyModal">
+                    <i class="bi bi-plus-circle me-1"></i>Факультет
+                </button>
+                <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#directionModal">
+                    <i class="bi bi-plus-lg me-1"></i>Направление
+                </button>
+            </div>
+        </div>
+
+        <div class="card-glass p-3 p-md-4 mb-4">
+            <div class="row g-3">
+                <div class="col-md-6 col-lg-4">
+                    <label class="form-label text-muted small text-uppercase">Факультет</label>
+                    <select class="form-select" id="directionFacultyFilter"></select>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-glass p-3 p-md-4">
+            <h2 class="h5 fw-bold mb-3">Направления подготовки</h2>
+            <div class="table-responsive">
+                <table class="table table-clean align-middle">
+                    <thead>
+                    <tr>
+                        <th>Код</th>
+                        <th>Название</th>
+                        <th>Факультет</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id="directionsTable">
+                    <tr>
+                        <td colspan="4" class="text-center text-muted py-4">Загрузка...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="card-glass p-3 p-md-4 mt-4">
+            <h2 class="h5 fw-bold mb-3">Факультеты</h2>
+            <div class="table-responsive">
+                <table class="table table-clean align-middle">
+                    <thead>
+                    <tr>
+                        <th>Код</th>
+                        <th>Название</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id="facultiesTable">
+                    <tr>
+                        <td colspan="3" class="text-center text-muted py-4">Загрузка...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="modal fade" id="directionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-spacious">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h2 class="modal-title h5" id="directionModalTitle">Новое направление</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3 needs-validation" id="directionForm" novalidate>
+                    <input type="hidden" id="directionId">
+                    <div class="col-md-4">
+                        <label class="form-label">Код *</label>
+                        <input type="text" class="form-control" id="directionCode" required>
+                        <div class="invalid-feedback">Введите код</div>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label">Название *</label>
+                        <input type="text" class="form-control" id="directionName" required>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Факультет *</label>
+                        <select class="form-select" id="directionFaculty" required></select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button class="btn btn-outline-dark" data-bs-dismiss="modal">Отмена</button>
+                <button class="btn btn-dark" id="saveDirectionBtn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="facultyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-spacious">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h2 class="modal-title h5" id="facultyModalTitle">Новый факультет</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3 needs-validation" id="facultyForm" novalidate>
+                    <input type="hidden" id="facultyId">
+                    <div class="col-md-4">
+                        <label class="form-label">Код *</label>
+                        <input type="text" class="form-control" id="facultyCode" required>
+                        <div class="invalid-feedback">Введите код</div>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label">Название *</label>
+                        <input type="text" class="form-control" id="facultyName" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button class="btn btn-outline-dark" data-bs-dismiss="modal">Отмена</button>
+                <button class="btn btn-dark" id="saveFacultyBtn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="fragments/layout :: baseScripts"></th:block>
+</body>
+</html>

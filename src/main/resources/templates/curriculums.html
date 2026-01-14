@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Учебные планы — Университет')"></head>
+<body>
+<th:block th:replace="fragments/layout :: appHeader('curriculums')"></th:block>
+<main class="page-shell" id="curriculumsPage">
+    <div class="container">
+        <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+            <div>
+                <p class="section-title mb-1">READ ONLY</p>
+                <h1 class="h3 fw-bold text-uppercase mb-0">Учебные планы</h1>
+                <p class="text-muted mb-0">Фейковые данные, только просмотр, без возможности изменения.</p>
+            </div>
+            <div class="info-tile">
+                <span class="fw-semibold text-success"><i class="bi bi-shield-check me-1"></i>Данные защищены от редактирования</span>
+            </div>
+        </div>
+
+        <div class="card-glass p-3 p-md-4 mb-4">
+            <div class="row g-3">
+                <div class="col-md-6 col-lg-4">
+                    <label class="form-label text-muted small text-uppercase">Направление</label>
+                    <select class="form-select" id="curriculumDirection"></select>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-glass p-3 p-md-4">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h2 class="h5 fw-bold mb-0">Дисциплины</h2>
+                <span class="badge text-bg-light" id="curriculumCount">0</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-clean align-middle">
+                    <thead>
+                    <tr>
+                        <th>Курс</th>
+                        <th>Дисциплина</th>
+                        <th>Часы</th>
+                        <th>Аттестация</th>
+                        <th>Направление</th>
+                    </tr>
+                    </thead>
+                    <tbody id="curriculumTable">
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">Загрузка...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+<th:block th:replace="fragments/layout :: baseScripts"></th:block>
+</body>
+</html>

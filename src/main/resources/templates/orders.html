@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Приказы — Университет')"></head>
+<body>
+<th:block th:replace="fragments/layout :: appHeader('orders')"></th:block>
+<main class="page-shell" id="ordersPage">
+    <div class="container">
+        <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+            <div>
+                <p class="section-title mb-1">Движение контингента</p>
+                <h1 class="h3 fw-bold text-uppercase mb-0">Приказы</h1>
+                <p class="text-muted mb-0">Текст формируется автоматически по шаблону в момент сохранения.</p>
+            </div>
+            <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#orderModal">
+                <i class="bi bi-plus-lg me-1"></i>Создать приказ
+            </button>
+        </div>
+
+        <div class="card-glass p-3 p-md-4">
+            <div class="table-responsive">
+                <table class="table table-clean align-middle">
+                    <thead>
+                    <tr>
+                        <th>Номер</th>
+                        <th>Дата</th>
+                        <th>Тип</th>
+                        <th>Подписант</th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody id="ordersTable">
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">Загрузка...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="modal fade" id="orderModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg modal-spacious">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h2 class="modal-title h5" id="orderModalTitle">Новый приказ</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3 needs-validation" id="orderForm" novalidate>
+                    <input type="hidden" id="orderId">
+                    <div class="col-md-4">
+                        <label class="form-label">Номер *</label>
+                        <input type="text" class="form-control" id="orderNumber" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Дата приказа *</label>
+                        <input type="date" class="form-control" id="orderDate" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Тип *</label>
+                        <select class="form-select" id="orderType" required>
+                            <option value="ACADEMIC_LEAVE">Академический отпуск</option>
+                            <option value="ENROLLMENT">Зачисление студентов</option>
+                            <option value="EXPULSION">Отчисление студентов</option>
+                            <option value="TRANSFER_DIRECTION">Перевод на другое направление</option>
+                            <option value="TRANSFER_NEXT_COURSE">Перевод на следующий курс</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Подписант</label>
+                        <input type="text" class="form-control" id="signerName" placeholder="ФИО">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Должность подписанта</label>
+                        <input type="text" class="form-control" id="signerPosition" placeholder="Например, Декан ФИиАТ">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Дата подписи</label>
+                        <input type="date" class="form-control" id="signDate">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Список студентов (ФИО через запятую)</label>
+                        <textarea class="form-control" id="studentsList" rows="2"></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Период / Дата начала</label>
+                        <input type="date" class="form-control" id="periodStart">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Период / Дата окончания</label>
+                        <input type="date" class="form-control" id="periodEnd">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Основание</label>
+                        <input type="text" class="form-control" id="basis" placeholder="Заявление студента">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Информация о договоре / стоимости</label>
+                        <input type="text" class="form-control" id="contractInfo" placeholder="Договор №01, оплата...">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Направление</label>
+                        <input type="text" class="form-control" id="directionName" placeholder="09.03.01 Информатика">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Группа</label>
+                        <input type="text" class="form-control" id="groupCode" placeholder="ПИ-201">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Форма обучения</label>
+                        <input type="text" class="form-control" id="educationForm" placeholder="Очная">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Основа обучения</label>
+                        <input type="text" class="form-control" id="educationBase" placeholder="Бюджет / внебюджет">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Старая группа</label>
+                        <input type="text" class="form-control" id="oldGroup">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Новая группа</label>
+                        <input type="text" class="form-control" id="newGroup">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Старое направление</label>
+                        <input type="text" class="form-control" id="oldDirection">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Новое направление</label>
+                        <input type="text" class="form-control" id="newDirection">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Предыдущий курс</label>
+                        <input type="number" min="1" max="6" class="form-control" id="previousCourse">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Следующий курс</label>
+                        <input type="number" min="1" max="6" class="form-control" id="nextCourse">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Дата отчисления</label>
+                        <input type="date" class="form-control" id="expelDate">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Стоимость (если внебюджет)</label>
+                        <input type="text" class="form-control" id="costInfo">
+                    </div>
+                </form>
+                <p class="small text-muted mt-3 mb-0">Текст приказа генерируется автоматически на сервере по выбранному шаблону.</p>
+            </div>
+            <div class="modal-footer border-0">
+                <button class="btn btn-outline-dark" data-bs-dismiss="modal">Отмена</button>
+                <button class="btn btn-dark" id="saveOrderBtn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<th:block th:replace="fragments/layout :: baseScripts"></th:block>
+</body>
+</html>

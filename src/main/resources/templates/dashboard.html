@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: head('Панель — Университет')"></head>
+<body>
+<th:block th:replace="fragments/layout :: appHeader('dashboard')"></th:block>
+<main class="page-shell">
+    <div class="container">
+        <section class="text-center mb-5">
+            <p class="section-title mb-1">Информационная система</p>
+            <h1 class="display-5 hero-title mb-3">Учёт контингента студентов</h1>
+            <p class="text-muted mb-0">Быстрая работа с данными студентов, учебных планов и приказов движения.</p>
+        </section>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card-glass p-4 h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="feature-icon"><i class="bi bi-people"></i></div>
+                        <span class="app-badge">CRUD</span>
+                    </div>
+                    <h2 class="h5 fw-bold mt-3">Студенты</h2>
+                    <p class="text-muted mb-3">Добавляйте, редактируйте и фильтруйте студентов по факультету, группе и курсу.</p>
+                    <a th:href="@{/students}" class="btn btn-dark w-100">Открыть</a>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-glass p-4 h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="feature-icon"><i class="bi bi-diagram-3"></i></div>
+                        <span class="app-badge">Справочники</span>
+                    </div>
+                    <h2 class="h5 fw-bold mt-3">Группы и направления</h2>
+                    <p class="text-muted mb-3">Управляйте факультетами, направлениями подготовки и учебными группами.</p>
+                    <div class="d-grid gap-2">
+                        <a th:href="@{/groups}" class="btn btn-outline-dark">Группы</a>
+                        <a th:href="@{/directions}" class="btn btn-outline-dark">Направления</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-glass p-4 h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="feature-icon"><i class="bi bi-journal-text"></i></div>
+                        <span class="app-badge">READ ONLY</span>
+                    </div>
+                    <h2 class="h5 fw-bold mt-3">Учебные планы</h2>
+                    <p class="text-muted mb-3">Просматривайте закреплённые за направлениями дисциплины и формы аттестации.</p>
+                    <a th:href="@{/curriculums}" class="btn btn-outline-dark">Перейти</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card-glass p-4 h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="feature-icon"><i class="bi bi-megaphone"></i></div>
+                        <span class="app-badge">Движение</span>
+                    </div>
+                    <h2 class="h5 fw-bold mt-3">Приказы</h2>
+                    <p class="text-muted mb-3">Генерация текстов приказов, печать и хранение ключевых полей.</p>
+                    <a th:href="@{/orders}" class="btn btn-dark">К приказам</a>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card-glass p-4 h-100">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="feature-icon"><i class="bi bi-graph-up"></i></div>
+                        <span class="app-badge">Отчёты</span>
+                    </div>
+                    <h2 class="h5 fw-bold mt-3">Количественный анализ</h2>
+                    <p class="text-muted mb-3">Отчёты по факультетам, направлениям и группам с фильтром по периоду.</p>
+                    <a th:href="@{/reports}" class="btn btn-outline-dark">Перейти к отчётам</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<th:block th:replace="fragments/layout :: baseScripts"></th:block>
+</body>
+</html>
