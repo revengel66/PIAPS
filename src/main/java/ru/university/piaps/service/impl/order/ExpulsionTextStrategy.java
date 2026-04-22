@@ -13,12 +13,6 @@ public class ExpulsionTextStrategy implements OrderTextStrategy {
         if (request.getExpelDate() != null) {
             sb.append("\nДата отчисления: ").append(request.getExpelDate());
         }
-        if (request.getBasis() != null) {
-            sb.append("\nОснование: ").append(request.getBasis());
-        }
-        if (request.getContractInfo() != null) {
-            sb.append("\nИнформация о договоре: ").append(request.getContractInfo());
-        }
         return sb.toString();
     }
 }

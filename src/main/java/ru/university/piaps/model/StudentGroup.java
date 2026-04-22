@@ -28,11 +28,23 @@ public class StudentGroup {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 20)
     private String code;
 
     @Column(nullable = false)
     private Integer course;
+
+    @Column(name = "education_level", length = 16)
+    private String educationLevel;
+
+    @Column(name = "education_form", length = 16)
+    private String educationForm;
+
+    @Column(name = "accelerated")
+    private Boolean accelerated;
+
+    @Column(name = "group_number")
+    private Integer groupNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "direction_id")

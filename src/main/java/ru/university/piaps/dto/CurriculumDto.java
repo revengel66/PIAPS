@@ -8,9 +8,17 @@ import lombok.Value;
 public class CurriculumDto {
     Long id;
     Integer course;
+    Integer semester;
     String discipline;
     Integer hours;
     String attestation;
+    Boolean courseWork;
+    String educationLevel;
+    String educationForm;
+    Boolean accelerated;
+    Integer planYear;
     Long directionId;
     String directionName;
+    Long facultyId;
+    String facultyName;
 }

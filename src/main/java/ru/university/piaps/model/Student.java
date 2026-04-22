@@ -10,7 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
@@ -34,15 +33,16 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 64)
     private String lastName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 64)
     private String firstName;
 
+    @Column(length = 64)
     private String middleName;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 32)
     private String recordBook;
 
     @Column(nullable = false)
@@ -54,12 +54,26 @@ public class Student {
 
     private LocalDate birthDate;
 
+    @Column(length = 32)
     private String phone;
 
+    @Column(length = 128)
     private String email;
 
-    @Column(name = "enrollment_date")
-    private LocalDate enrollmentDate;
+    @Column(name = "education_form", length = 32)
+    private String educationForm;
+
+    @Column(name = "education_base", length = 32)
+    private String educationBase;
+
+    @Column(name = "study_contract_number", unique = true, length = 64)
+    private String studyContractNumber;
+
+    @Column(name = "study_start_date")
+    private LocalDate studyStartDate;
+
+    @Column(name = "has_academic_debts")
+    private Boolean hasAcademicDebts;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "group_id")
@@ -75,10 +89,4 @@ public class Student {
         return builder.toString();
     }
 
-    @PrePersist
-    public void ensureEnrollmentDate() {
-        if (enrollmentDate == null) {
-            enrollmentDate = LocalDate.now();
-        }
-    }
 }

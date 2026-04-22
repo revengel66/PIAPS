@@ -19,10 +19,18 @@ public class StudentDto {
     StudentStatus status;
     Long groupId;
     String groupCode;
+    Long directionId;
+    String directionCode;
     String directionName;
+    Long facultyId;
     String facultyName;
+    String facultyShortName;
+    String educationForm;
+    String educationBase;
+    Boolean hasAcademicDebts;
+    String studyContractNumber;
+    LocalDate studyStartDate;
     String phone;
     String email;
     LocalDate birthDate;
-    LocalDate enrollmentDate;
 }

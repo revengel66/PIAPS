@@ -12,6 +12,7 @@ public class ContingentReportRow {
     String directionName;
     Long groupId;
     String groupCode;
+    Integer groupCourse;
 
     long total;
     long active;

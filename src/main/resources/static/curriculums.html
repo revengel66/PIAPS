@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Учебные планы — Университет</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+          crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/app.css?v=20260422-59">
+</head>
+
+<body>
+<div id="appHeaderMount" data-active="curriculums"></div>
+<main class="page-shell" id="curriculumsPage">
+    <div class="container">
+        <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+            <div>
+                <p class="section-title mb-1">READ ONLY</p>
+                <h1 class="h3 fw-bold text-uppercase mb-0">Учебные планы</h1>
+                <p class="text-muted mb-0">Фейковые данные, только просмотр, без возможности изменения.</p>
+            </div>
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <button class="btn btn-outline-dark" id="reloadCurriculums">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Обновить
+                </button>
+                <div class="info-tile">
+                    <span class="fw-semibold text-success"><i class="bi bi-shield-check me-1"></i>Данные защищены от редактирования</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-glass p-3 p-md-4 mb-4">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-6 col-lg-3">
+                    <label class="form-label text-muted small text-uppercase">Факультет</label>
+                    <select class="form-select" id="curriculumFaculty"></select>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <label class="form-label text-muted small text-uppercase">Направление</label>
+                    <select class="form-select" id="curriculumDirection"></select>
+                </div>
+                <div class="col-md-6 col-lg-2">
+                    <label class="form-label text-muted small text-uppercase">Уровень образования</label>
+                    <select class="form-select" id="curriculumEducationLevel">
+                        <option value="">Все</option>
+                        <option value="BACHELOR">Бакалавр</option>
+                        <option value="SPECIALIST">Специалитет</option>
+                        <option value="MASTER">Магистратура</option>
+                    </select>
+                </div>
+                <div class="col-md-6 col-lg-2">
+                    <label class="form-label text-muted small text-uppercase">Форма обучения</label>
+                    <select class="form-select" id="curriculumEducationForm">
+                        <option value="">Все</option>
+                        <option value="FULL_TIME">Очная</option>
+                        <option value="PART_TIME">Очно-заочная</option>
+                        <option value="DISTANCE">Заочная</option>
+                    </select>
+                </div>
+                <div class="col-md-6 col-lg-2">
+                    <label class="form-label text-muted small text-uppercase">Ускоренная форма</label>
+                    <div class="filter-check-control">
+                        <div class="form-check m-0">
+                            <input class="form-check-input" type="checkbox" id="curriculumAccelerated">
+                            <label class="form-check-label" for="curriculumAccelerated">Ускоренные</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-2 d-flex align-items-end gap-2">
+                    <button class="btn btn-outline-dark w-100" id="showCurriculumPlan" type="button">
+                        Показать
+                    </button>
+                    <button class="btn btn-outline-dark flex-shrink-0" id="resetCurriculumFilters" type="button" title="Сбросить фильтры" aria-label="Сбросить фильтры">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-glass p-4 text-center text-muted mb-4" id="curriculumEmptyState">
+            Выберите факультет, направление, уровень и форму обучения, затем нажмите «Показать».
+        </div>
+
+        <div class="card-glass p-3 p-md-4 d-none" id="curriculumResultCard">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <h2 class="h5 fw-bold mb-0">Учебный план</h2>
+                    <select class="form-select form-select-sm curriculum-plan-year-select" id="curriculumPlanYear"></select>
+                </div>
+                <span class="badge text-bg-light" id="curriculumCount">0</span>
+            </div>
+            <p class="text-muted mb-3" id="curriculumSelectionMeta"></p>
+            <div class="row g-3">
+                <div class="col-lg-2">
+                    <div class="nav nav-pills flex-column curriculum-course-tabs" id="curriculumCourseTabs"></div>
+                </div>
+                <div class="col-lg-10">
+                    <div class="nav nav-tabs curriculum-semester-tabs mb-3" id="curriculumSemesterTabs"></div>
+                    <div class="table-responsive">
+                        <table class="table table-clean table-curriculums align-middle">
+                            <thead>
+                            <tr>
+                                <th class="col-semester">Семестр</th>
+                                <th class="col-discipline">Дисциплина</th>
+                                <th class="col-hours">Часы</th>
+                                <th class="col-attestation">Аттестация</th>
+                            </tr>
+                            </thead>
+                            <tbody id="curriculumTable">
+                            <tr>
+                                <td colspan="4" class="text-center text-muted py-4">Нет данных</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-glass p-3 p-md-4 mt-3" id="curriculumComparePanel">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
+                <h3 class="h6 mb-0">Сравнение учебных планов</h3>
+            </div>
+                <div class="small text-muted mb-3" id="curriculumCompareMeta">Выберите параметры левого и правого учебного плана.</div>
+
+                <div class="curriculum-flat-block p-3 mb-3">
+                    <div class="row g-4">
+                        <div class="col-lg-6">
+                            <div class="row g-3 align-items-end">
+                                <div class="col-12">
+                                    <label class="form-label text-muted small text-uppercase">Направление</label>
+                                    <select class="form-select" id="curriculumCompareLeftDirection"></select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label text-muted small text-uppercase">Уровень образования</label>
+                                    <select class="form-select" id="curriculumCompareLeftEducationLevel"></select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label text-muted small text-uppercase">Форма обучения</label>
+                                    <select class="form-select" id="curriculumCompareLeftEducationForm"></select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label text-muted small text-uppercase">Учебный год</label>
+                                    <select class="form-select" id="curriculumCompareLeftPlanYear"></select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-muted small text-uppercase">Ускоренная форма</label>
+                                    <div class="filter-check-control">
+                                        <div class="form-check m-0">
+                                            <input class="form-check-input" type="checkbox" id="curriculumCompareLeftAccelerated">
+                                            <label class="form-check-label" for="curriculumCompareLeftAccelerated">Только ускоренные</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="row g-3 align-items-end">
+                                <div class="col-12">
+                                    <label class="form-label text-muted small text-uppercase">Направление</label>
+                                    <select class="form-select" id="curriculumCompareRightDirection"></select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label text-muted small text-uppercase">Уровень образования</label>
+                                    <select class="form-select" id="curriculumCompareRightEducationLevel"></select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label text-muted small text-uppercase">Форма обучения</label>
+                                    <select class="form-select" id="curriculumCompareRightEducationForm"></select>
+                                </div>
+                                <div class="col-md-4">
+                                    <label class="form-label text-muted small text-uppercase">Учебный год</label>
+                                    <select class="form-select" id="curriculumCompareRightPlanYear"></select>
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label text-muted small text-uppercase">Ускоренная форма</label>
+                                    <div class="filter-check-control">
+                                        <div class="form-check m-0">
+                                            <input class="form-check-input" type="checkbox" id="curriculumCompareRightAccelerated">
+                                            <label class="form-check-label" for="curriculumCompareRightAccelerated">Только ускоренные</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
+                    <div class="nav nav-tabs curriculum-semester-tabs flex-grow-1" id="curriculumCompareCourseTabs"></div>
+                    <div class="d-flex align-items-center gap-2 flex-shrink-0">
+                        <button class="btn btn-outline-dark flex-shrink-0" id="curriculumCompareToggleDiff" type="button">Разница</button>
+                        <button class="btn btn-outline-dark flex-shrink-0" id="curriculumCompareReset" type="button" title="Сбросить фильтры сравнения" aria-label="Сбросить фильтры сравнения">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="nav nav-tabs curriculum-semester-tabs mb-3" id="curriculumCompareSemesterTabs"></div>
+                <div class="row g-3 curriculum-diff-layout">
+                    <div class="col-lg-6">
+                        <div class="curriculum-flat-block p-3 h-100">
+                            <h3 class="h6 mb-2" id="curriculumCompareLeftLabel">Левый учебный план</h3>
+                            <table class="table table-clean table-curriculums table-sm align-middle mb-0 curriculum-diff-table">
+                                <thead>
+                                <tr>
+                                    <th class="col-semester">Семестр</th>
+                                    <th class="col-discipline">Дисциплина</th>
+                                    <th class="col-hours">Часы</th>
+                                    <th class="col-attestation">Аттестация</th>
+                                </tr>
+                                </thead>
+                                <tbody id="curriculumCompareLeftTable">
+                                <tr><td colspan="4" class="text-center text-muted py-3">Нет данных</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="curriculum-flat-block p-3 h-100">
+                            <h3 class="h6 mb-2" id="curriculumCompareRightLabel">Правый учебный план</h3>
+                            <table class="table table-clean table-curriculums table-sm align-middle mb-0 curriculum-diff-table">
+                                <thead>
+                                <tr>
+                                    <th class="col-semester">Семестр</th>
+                                    <th class="col-discipline">Дисциплина</th>
+                                    <th class="col-hours">Часы</th>
+                                    <th class="col-attestation">Аттестация</th>
+                                </tr>
+                                </thead>
+                                <tbody id="curriculumCompareRightTable">
+                                <tr><td colspan="4" class="text-center text-muted py-3">Нет данных</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<script src="/js/layout.js?v=20260420-01"></script>
+<script src="/js/app.js?v=20260422-99"></script>
+
+</body>
+</html>

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ru.university.piaps.dto.FacultyDeleteTransferRequest;
 import ru.university.piaps.dto.FacultyDto;
 import ru.university.piaps.service.FacultyService;
 
@@ -44,5 +45,11 @@ public class FacultyController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         facultyService.delete(id);
+    }
+
+    @PostMapping("/{id}/delete-with-transfer")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteWithTransfer(@PathVariable Long id, @RequestBody FacultyDeleteTransferRequest request) {
+        facultyService.deleteWithTransfer(id, request);
     }
 }

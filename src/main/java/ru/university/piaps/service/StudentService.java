@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface StudentService {
     List<StudentDto> findStudents(StudentSearchCriteria criteria);
-    StudentPageResponse findStudentsPage(StudentSearchCriteria criteria, int page, int size);
+    StudentPageResponse findStudentsPage(StudentSearchCriteria criteria, int page, int size, String sortBy, String sortDirection);
     StudentDto findById(Long id);
     StudentDto create(StudentRequest request);
     StudentDto update(Long id, StudentRequest request);

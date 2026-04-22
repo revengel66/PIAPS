@@ -34,6 +34,9 @@ public class StudentController {
                                     @RequestParam(required = false) Long directionId,
                                     @RequestParam(required = false) Long groupId,
                                     @RequestParam(required = false) Integer course,
+                                    @RequestParam(required = false) String educationLevel,
+                                    @RequestParam(required = false) String educationForm,
+                                    @RequestParam(required = false) Boolean accelerated,
                                     @RequestParam(required = false) StudentStatus status,
                                     @RequestParam(required = false) String search) {
         StudentSearchCriteria criteria = StudentSearchCriteria.builder()
@@ -41,6 +44,9 @@ public class StudentController {
                 .directionId(directionId)
                 .groupId(groupId)
                 .course(course)
+                .educationLevel(educationLevel)
+                .educationForm(educationForm)
+                .accelerated(accelerated)
                 .status(status)
                 .search(search)
                 .build();
@@ -52,19 +58,27 @@ public class StudentController {
                                          @RequestParam(required = false) Long directionId,
                                          @RequestParam(required = false) Long groupId,
                                          @RequestParam(required = false) Integer course,
+                                         @RequestParam(required = false) String educationLevel,
+                                         @RequestParam(required = false) String educationForm,
+                                         @RequestParam(required = false) Boolean accelerated,
                                          @RequestParam(required = false) StudentStatus status,
                                          @RequestParam(required = false) String search,
                                          @RequestParam(defaultValue = "0") int page,
-                                         @RequestParam(defaultValue = "10") int size) {
+                                         @RequestParam(defaultValue = "10") int size,
+                                         @RequestParam(defaultValue = "id") String sortBy,
+                                         @RequestParam(defaultValue = "desc") String sortDirection) {
         StudentSearchCriteria criteria = StudentSearchCriteria.builder()
                 .facultyId(facultyId)
                 .directionId(directionId)
                 .groupId(groupId)
                 .course(course)
+                .educationLevel(educationLevel)
+                .educationForm(educationForm)
+                .accelerated(accelerated)
                 .status(status)
                 .search(search)
                 .build();
-        return studentService.findStudentsPage(criteria, page, size);
+        return studentService.findStudentsPage(criteria, page, size, sortBy, sortDirection);
     }
 
     @GetMapping("/{id}")

@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Приказы — Университет</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+          crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/app.css?v=20260422-72">
+</head>
+
+<body>
+<div id="appHeaderMount" data-active="orders"></div>
+<main class="page-shell" id="ordersPage">
+    <div class="container">
+        <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+            <div>
+                <p class="section-title mb-1">Движение контингента</p>
+                <h1 class="h3 fw-bold text-uppercase mb-0">Приказы</h1>
+                <p class="text-muted mb-0">Создание, редактирование и просмотр выполняются в отдельной форме.</p>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <button class="btn btn-outline-dark" id="reloadOrders">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Обновить
+                </button>
+                <a class="btn btn-dark" href="/order-form.html">
+                    <i class="bi bi-plus-lg me-1"></i>Создать приказ
+                </a>
+            </div>
+        </div>
+
+        <div class="card-glass p-3 p-md-4">
+            <div class="row g-3 align-items-end mb-3">
+                <div class="col-lg-2 col-md-3">
+                    <label class="form-label text-muted small text-uppercase" for="orderDateFrom">Дата с</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="orderDateFrom" placeholder="дд.мм.гггг">
+                        <button class="btn btn-outline-dark" type="button" id="orderDateFromPicker" aria-label="Выбрать дату">
+                            <i class="bi bi-calendar3"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3">
+                    <label class="form-label text-muted small text-uppercase" for="orderDateTo">Дата по</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="orderDateTo" placeholder="дд.мм.гггг">
+                        <button class="btn btn-outline-dark" type="button" id="orderDateToPicker" aria-label="Выбрать дату">
+                            <i class="bi bi-calendar3"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <label class="form-label text-muted small text-uppercase" for="orderTypeFilter">Тип приказа</label>
+                    <select class="form-select" id="orderTypeFilter">
+                        <option value="">Все</option>
+                        <option value="TRANSFER_NEXT_COURSE">Перевод на следующий курс</option>
+                        <option value="TRANSFER_DIRECTION">Перевод на другое направление</option>
+                        <option value="ACADEMIC_LEAVE">Академический отпуск</option>
+                        <option value="EXPULSION">Отчисление</option>
+                        <option value="ENROLLMENT">Зачисление</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <label class="form-label text-muted small text-uppercase" for="orderStatusFilter">Статус приказа</label>
+                    <select class="form-select" id="orderStatusFilter">
+                        <option value="">Все</option>
+                        <option value="DRAFT">Черновик</option>
+                        <option value="EXECUTED">Осуществлён</option>
+                        <option value="SIGNED">Подписан</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-4">
+                    <label class="form-label text-muted small text-uppercase" for="orderSort">Сортировка</label>
+                    <select class="form-select" id="orderSort">
+                        <option value="date_desc" selected>Сначала новые (дата)</option>
+                        <option value="date_asc">Сначала старые (дата)</option>
+                        <option value="number_asc">Номер: по возрастанию</option>
+                        <option value="number_desc">Номер: по убыванию</option>
+                    </select>
+                </div>
+                <div class="col-lg-2 col-md-6">
+                    <label class="form-label text-muted small text-uppercase d-block">&nbsp;</label>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button class="btn btn-dark px-3" id="applyOrderFilters" type="button" title="Применить фильтры" aria-label="Применить фильтры">
+                            <i class="bi bi-check2"></i>
+                        </button>
+                        <button class="btn btn-outline-dark px-3" id="resetOrderFilters" type="button" title="Сбросить фильтры" aria-label="Сбросить фильтры">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-clean table-orders align-middle">
+                    <thead>
+                    <tr>
+                        <th class="col-id">ID</th>
+                        <th class="col-number">Номер</th>
+                        <th class="col-date">Дата</th>
+                        <th class="col-type">Тип</th>
+                        <th class="col-status">Статус</th>
+                        <th class="text-end col-actions">Действия</th>
+                    </tr>
+                    </thead>
+                    <tbody id="ordersTable">
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">Загрузка...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mt-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="text-muted small text-uppercase">На странице</span>
+                    <select class="form-select form-select-sm w-auto" id="ordersPageSize">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="d-flex align-items-center gap-1 flex-wrap">
+                    <button class="btn btn-outline-dark btn-sm px-2" id="ordersPageFirst" type="button">&lt;&lt;</button>
+                    <button class="btn btn-outline-dark btn-sm px-2" id="ordersPagePrev" type="button">&lt;</button>
+                    <div class="d-flex align-items-center gap-1" id="ordersPageNumbers"></div>
+                    <button class="btn btn-outline-dark btn-sm px-2" id="ordersPageNext" type="button">&gt;</button>
+                    <button class="btn btn-outline-dark btn-sm px-2" id="ordersPageLast" type="button">&gt;&gt;</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<script src="/js/layout.js?v=20260420-01"></script>
+<script src="/js/app.js?v=20260422-99"></script>
+
+</body>
+</html>

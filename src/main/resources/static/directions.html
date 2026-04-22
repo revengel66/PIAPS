@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Направления — Университет</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+          crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/app.css?v=20260420-18">
+</head>
+
+<body>
+<div id="appHeaderMount" data-active="directions"></div>
+<main class="page-shell" id="directionsPage">
+    <div class="container">
+        <div class="d-flex flex-column flex-lg-row align-items-lg-center justify-content-between gap-3 mb-4">
+            <div>
+                <p class="section-title mb-1">Справочник</p>
+                <h1 class="h3 fw-bold text-uppercase mb-0">Направления</h1>
+            </div>
+            <div class="d-flex flex-wrap gap-2">
+                <button class="btn btn-outline-dark" id="reloadDirections">
+                    <i class="bi bi-arrow-clockwise me-1"></i>Обновить
+                </button>
+                <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#directionModal">
+                    <i class="bi bi-plus-lg me-1"></i>Направление
+                </button>
+            </div>
+        </div>
+
+        <div class="card-glass p-3 p-md-4 mb-4">
+            <div class="row g-3">
+                <div class="col-md-6 col-lg-4">
+                    <label class="form-label text-muted small text-uppercase">Поиск</label>
+                    <input type="text" class="form-control" id="directionSearch" placeholder="Код, аббревиатура или название">
+                </div>
+                <div class="col-md-6 col-lg-3">
+                    <label class="form-label text-muted small text-uppercase">Факультет</label>
+                    <select class="form-select" id="directionFacultyFilter"></select>
+                </div>
+                <div class="col-md-6 col-lg-2">
+                    <label class="form-label text-muted small text-uppercase">Сортировка</label>
+                    <select class="form-select" id="directionSort">
+                        <option value="createdAt" selected>По дате создания</option>
+                        <option value="name">По алфавиту</option>
+                        <option value="code">По коду</option>
+                        <option value="faculty">По факультету</option>
+                    </select>
+                </div>
+                <div class="col-md-6 col-lg-2">
+                    <label class="form-label text-muted small text-uppercase">Направление сортировки</label>
+                    <select class="form-select" id="directionSortDirection">
+                        <option value="asc">По возрастанию</option>
+                        <option value="desc" selected>По убыванию</option>
+                    </select>
+                </div>
+                <div class="col-md-6 col-lg-1 d-flex align-items-end">
+                    <button class="btn btn-outline-dark w-100" id="resetDirectionFilters" type="button" title="Сбросить фильтры и поиск">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-glass p-3 p-md-4">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h2 class="h5 fw-bold mb-0">Направления подготовки</h2>
+                <span class="badge text-bg-light" id="directionsCount">0</span>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-clean table-directions align-middle">
+                    <thead>
+                    <tr>
+                        <th class="col-code">Код</th>
+                        <th class="col-short" title="Аббревиатура">Аббр.</th>
+                        <th class="col-name">Название</th>
+                        <th class="col-faculty">Факультет</th>
+                        <th class="col-tuition">Оплата в год</th>
+                        <th class="col-students text-end">Учащихся</th>
+                        <th class="text-end">Действия</th>
+                    </tr>
+                    </thead>
+                    <tbody id="directionsTable">
+                    <tr>
+                        <td colspan="7" class="text-center text-muted py-4">Загрузка...</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mt-3">
+                <div class="d-flex align-items-center gap-2">
+                    <span class="text-muted small text-uppercase">На странице</span>
+                    <select class="form-select form-select-sm w-auto" id="directionsPageSize">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </div>
+                <div class="d-flex align-items-center gap-1 flex-wrap">
+                    <button class="btn btn-outline-dark btn-sm px-2" id="directionsPageFirst" type="button">&lt;&lt;</button>
+                    <button class="btn btn-outline-dark btn-sm px-2" id="directionsPagePrev" type="button">&lt;</button>
+                    <div class="d-flex align-items-center gap-1" id="directionsPageNumbers"></div>
+                    <button class="btn btn-outline-dark btn-sm px-2" id="directionsPageNext" type="button">&gt;</button>
+                    <button class="btn btn-outline-dark btn-sm px-2" id="directionsPageLast" type="button">&gt;&gt;</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<div class="modal fade" id="directionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-spacious">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h2 class="modal-title h5" id="directionModalTitle">Новое направление</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3 needs-validation" id="directionForm" novalidate>
+                    <input type="hidden" id="directionId">
+                    <div class="col-md-4">
+                        <label class="form-label">Код *</label>
+                        <input type="text" class="form-control" id="directionCode" placeholder="01.03.01" pattern="\d{2}\.\d{2}\.\d{2}" maxlength="8" inputmode="numeric" autocomplete="off" required>
+                        <div class="invalid-feedback">Введите код в формате 00.00.00</div>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label">Название *</label>
+                        <input type="text"
+                               class="form-control"
+                               id="directionName"
+                               required
+                               minlength="6"
+                               maxlength="80"
+                               pattern="[A-Za-zА-Яа-яЁё\-\s]+">
+                        <div class="invalid-feedback" id="directionNameFeedback" data-field="direction-name">Название направления выглядит некорректно.</div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Аббревиатура</label>
+                        <input type="text"
+                               class="form-control"
+                               id="directionShortName"
+                               maxlength="16"
+                               placeholder="Например, ПИ">
+                        <div class="form-text">Формируется автоматически при вводе названия, можно изменить вручную.</div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Факультет *</label>
+                        <select class="form-select" id="directionFaculty" required></select>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Размер оплаты в год</label>
+                        <input type="text"
+                               class="form-control"
+                               id="directionAnnualTuition"
+                               placeholder="Например, 155 000,00"
+                               maxlength="14"
+                               pattern="[0-9\s.,]*"
+                               inputmode="decimal"
+                               autocomplete="off">
+                        <div class="invalid-feedback" data-field="annual-tuition">Размер оплаты выглядит некорректно.</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button class="btn btn-outline-dark" data-bs-dismiss="modal">Отмена</button>
+                <button class="btn btn-dark" id="saveDirectionBtn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="facultyModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-spacious">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h2 class="modal-title h5" id="facultyModalTitle">Новый факультет</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3 needs-validation" id="facultyForm" novalidate>
+                    <input type="hidden" id="facultyId">
+                    <div class="col-12">
+                        <label class="form-label">Название *</label>
+                        <div class="input-group">
+                            <span class="input-group-text">Факультет</span>
+                            <input type="text"
+                                   class="form-control"
+                                   id="facultyName"
+                                   required
+                                   minlength="6"
+                                   maxlength="80"
+                                   pattern="[A-Za-zА-Яа-яЁё\-\s]+"
+                                   placeholder="информационных технологий">
+                            <div class="invalid-feedback" data-field="name">Название факультета выглядит некорректно.</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label">Аббревиатура</label>
+                        <input type="text"
+                               class="form-control"
+                               id="facultyShortName"
+                               maxlength="32"
+                               placeholder="Например, ФИТ">
+                        <div class="form-text">Если оставить пустым, сформируется автоматически.</div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button class="btn btn-outline-dark" data-bs-dismiss="modal">Отмена</button>
+                <button class="btn btn-dark" id="saveFacultyBtn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<script src="/js/layout.js?v=20260420-01"></script>
+<script src="/js/app.js?v=20260422-99"></script>
+
+</body>
+</html>

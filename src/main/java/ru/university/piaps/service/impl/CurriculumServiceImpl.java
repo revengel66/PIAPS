@@ -28,14 +28,28 @@ public class CurriculumServiceImpl implements CurriculumService {
     }
 
     private CurriculumDto toDto(Curriculum curriculum) {
+        Long facultyId = curriculum.getDirection() != null && curriculum.getDirection().getFaculty() != null
+                ? curriculum.getDirection().getFaculty().getId()
+                : null;
+        String facultyName = curriculum.getDirection() != null && curriculum.getDirection().getFaculty() != null
+                ? curriculum.getDirection().getFaculty().getName()
+                : null;
         return CurriculumDto.builder()
                 .id(curriculum.getId())
                 .course(curriculum.getCourse())
+                .semester(curriculum.getSemester())
                 .discipline(curriculum.getDiscipline())
                 .hours(curriculum.getHours())
                 .attestation(curriculum.getAttestation())
+                .courseWork(Boolean.TRUE.equals(curriculum.getCourseWork()))
+                .educationLevel(curriculum.getEducationLevel())
+                .educationForm(curriculum.getEducationForm())
+                .accelerated(Boolean.TRUE.equals(curriculum.getAccelerated()))
+                .planYear(curriculum.getPlanYear())
                 .directionId(curriculum.getDirection() != null ? curriculum.getDirection().getId() : null)
                 .directionName(curriculum.getDirection() != null ? curriculum.getDirection().getName() : null)
+                .facultyId(facultyId)
+                .facultyName(facultyName)
                 .build();
     }
 }

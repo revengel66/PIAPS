@@ -5,6 +5,7 @@ import lombok.Value;
 import ru.university.piaps.model.OrderType;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Value
 @Builder
@@ -18,6 +19,12 @@ public class OrderDto {
     String signerPosition;
     String signerName;
     String studentsList;
+    List<Long> studentIds;
+    List<OrderStudentItemDto> studentItems;
+    Boolean executed;
+    LocalDate executedAt;
+    Boolean signed;
+    LocalDate signedAt;
     LocalDate periodStart;
     LocalDate periodEnd;
     String basis;

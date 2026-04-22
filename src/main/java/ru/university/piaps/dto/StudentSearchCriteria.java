@@ -11,6 +11,9 @@ public class StudentSearchCriteria {
     private final Long directionId;
     private final Long groupId;
     private final Integer course;
+    private final String educationLevel;
+    private final String educationForm;
+    private final Boolean accelerated;
     private final String search;
     private final StudentStatus status;
 
@@ -19,6 +22,9 @@ public class StudentSearchCriteria {
         this.directionId = builder.directionId;
         this.groupId = builder.groupId;
         this.course = builder.course;
+        this.educationLevel = builder.educationLevel;
+        this.educationForm = builder.educationForm;
+        this.accelerated = builder.accelerated;
         this.search = builder.search;
         this.status = builder.status;
     }
@@ -32,6 +38,9 @@ public class StudentSearchCriteria {
         private Long directionId;
         private Long groupId;
         private Integer course;
+        private String educationLevel;
+        private String educationForm;
+        private Boolean accelerated;
         private String search;
         private StudentStatus status;
 
@@ -52,6 +61,21 @@ public class StudentSearchCriteria {
 
         public Builder course(Integer course) {
             this.course = course;
+            return this;
+        }
+
+        public Builder educationLevel(String educationLevel) {
+            this.educationLevel = educationLevel;
+            return this;
+        }
+
+        public Builder educationForm(String educationForm) {
+            this.educationForm = educationForm;
+            return this;
+        }
+
+        public Builder accelerated(Boolean accelerated) {
+            this.accelerated = accelerated;
             return this;
         }
 

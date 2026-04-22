@@ -14,9 +14,6 @@ public class AcademicLeaveTextStrategy implements OrderTextStrategy {
         if (request.getPeriodStart() != null && request.getPeriodEnd() != null) {
             sb.append("\nПериод: с ").append(request.getPeriodStart()).append(" по ").append(request.getPeriodEnd()).append(".");
         }
-        if (request.getBasis() != null && !request.getBasis().isBlank()) {
-            sb.append("\nОснование: ").append(request.getBasis());
-        }
         return sb.toString();
     }
 }

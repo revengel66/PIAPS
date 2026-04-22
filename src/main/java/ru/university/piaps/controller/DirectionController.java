@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import ru.university.piaps.dto.DirectionDeleteTransferRequest;
 import ru.university.piaps.dto.DirectionDto;
 import ru.university.piaps.service.DirectionService;
 
@@ -45,5 +46,11 @@ public class DirectionController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         directionService.delete(id);
+    }
+
+    @PostMapping("/{id}/delete-with-transfer")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteWithTransfer(@PathVariable Long id, @RequestBody DirectionDeleteTransferRequest request) {
+        directionService.deleteWithTransfer(id, request);
     }
 }

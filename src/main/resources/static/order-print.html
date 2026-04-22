@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Печать приказа</title>
+    <style>
+        :root { color-scheme: light; }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            background: #ececec;
+            color: #000;
+            font-family: "Times New Roman", Times, serif;
+            font-size: 14pt;
+        }
+        .print-toolbar {
+            max-width: 210mm;
+            margin: 12px auto 0;
+            text-align: right;
+            padding: 0 8px;
+        }
+        .print-btn {
+            border: 1px solid #000;
+            background: #fff;
+            color: #000;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 11pt;
+            padding: 6px 12px;
+        }
+        .sheet {
+            width: 210mm;
+            min-height: 297mm;
+            margin: 8px auto 16px;
+            background: #fff;
+            box-shadow: 0 2px 18px rgba(0, 0, 0, 0.08);
+            padding: 18mm 18mm 18mm 22mm;
+        }
+        .header-center {
+            text-align: center;
+            line-height: 1.15;
+        }
+        .header-center p { margin: 0; }
+        .header-main-first { margin-top: 4px !important; }
+        .header-main { font-weight: 700; text-transform: uppercase; }
+        .order-word {
+            margin: 18px 0 14px;
+            text-align: center;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+        }
+        .meta-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 12px;
+        }
+        .meta-row p { margin: 0; }
+        .order-number {
+            display: inline-block;
+            max-width: 150px;
+            text-align: right;
+            word-break: break-word;
+            line-height: 1.1;
+        }
+        .subject {
+            margin: 0 0 16px;
+            text-align: center;
+            font-size: 14pt;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        .paragraph {
+            margin: 0 0 10px;
+            line-height: 1.28;
+            text-align: justify;
+            text-justify: inter-word;
+            text-align-last: left;
+            text-indent: 1.6em;
+            font-family: inherit;
+            font-size: 14pt;
+            font-weight: 400;
+            letter-spacing: normal;
+            word-spacing: normal;
+            word-break: normal;
+            overflow-wrap: normal;
+            -webkit-hyphens: auto;
+            hyphens: auto;
+        }
+        .paragraph-left {
+            text-align: left;
+            text-align-last: left;
+        }
+        .command-title {
+            margin: 8px 0 10px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 14pt;
+            letter-spacing: normal;
+            word-spacing: normal;
+        }
+        .command-title-left {
+            text-align: left;
+        }
+        .students-list {
+            white-space: pre-line;
+            margin-top: 2px;
+        }
+        .students-list-item {
+            margin-bottom: 6px;
+            font-size: 14pt;
+            font-weight: 400;
+            letter-spacing: normal;
+            word-spacing: normal;
+            text-align: justify;
+            text-justify: inter-word;
+            text-align-last: left;
+            -webkit-hyphens: auto;
+            hyphens: auto;
+        }
+        .students-basis {
+            margin-top: -4px;
+            margin-bottom: 10px;
+            font-size: 14pt;
+            font-weight: 400;
+            letter-spacing: normal;
+            word-spacing: normal;
+            text-align: justify;
+            text-justify: inter-word;
+            text-align-last: left;
+            -webkit-hyphens: auto;
+            hyphens: auto;
+        }
+        .sign-date-row {
+            margin-top: 40px;
+            margin-bottom: 10px;
+        }
+        .signature-row {
+            margin: 0;
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+        }
+        .signature-role {
+            margin: 0;
+            line-height: 1.15;
+        }
+        .signature-line {
+            border-bottom: 1px solid #000;
+            flex: 0 0 260px;
+            min-width: 260px;
+            transform: translateY(-4px);
+        }
+        .print-error {
+            max-width: 210mm;
+            margin: 24px auto;
+            padding: 16px;
+            border: 1px solid #b3261e;
+            background: #fff4f4;
+            color: #b3261e;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+        @media print {
+            @page { size: A4; margin: 0; }
+            body { background: #fff; }
+            .print-toolbar { display: none; }
+            .sheet {
+                width: auto;
+                min-height: auto;
+                margin: 0;
+                box-shadow: none;
+                padding: 18mm 18mm 18mm 22mm;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="print-toolbar">
+    <button class="print-btn" type="button" onclick="window.print()">Печать</button>
+</div>
+
+<main class="sheet" id="printSheet">
+    <header class="header-center">
+        <p>МИНИСТЕРСТВО НАУКИ И ВЫСШЕГО ОБРАЗОВАНИЯ</p>
+        <p>РОССИЙСКОЙ ФЕДЕРАЦИИ</p>
+        <p>федеральное государственное бюджетное образовательное учреждение</p>
+        <p class="header-main header-main-first">«УЛЬЯНОВСКИЙ ГОСУДАРСТВЕННЫЙ ТЕХНИЧЕСКИЙ</p>
+        <p class="header-main">УНИВЕРСИТЕТ»</p>
+    </header>
+
+    <p class="order-word">П Р И К А З</p>
+
+    <div class="meta-row">
+        <p id="metaFullDate">«__» __________ ____ г.</p>
+        <p>Приказ № <span class="order-number" id="metaOrderNumber">—</span></p>
+    </div>
+
+    <h1 class="subject" id="subjectTitle">Движение контингента студентов</h1>
+    <section id="printBody"></section>
+
+    <p class="sign-date-row">
+        <span id="signDateLabel">Дата подписи приказа:</span>
+        <span id="signDateValue">—</span>
+    </p>
+
+    <p class="signature-row">
+        <span class="signature-role" id="signatureRole">Подписант</span>
+        <span class="signature-line"></span>
+    </p>
+</main>
+
+<script>
+    (() => {
+        const months = [
+            'января', 'февраля', 'марта', 'апреля', 'мая', 'июня',
+            'июля', 'августа', 'сентября', 'октября', 'ноября', 'декабря'
+        ];
+
+        const subjectByType = {
+            TRANSFER_NEXT_COURSE: 'Движение контингента студентов. Перевод студентов на следующий курс.',
+            TRANSFER_DIRECTION: 'Движение контингента студентов. Перевод студентов на другое направление',
+            ACADEMIC_LEAVE: 'Движение контингента студентов. О предоставлении академического отпуска студентам',
+            EXPULSION: 'Движение контингента студентов. Об отчислении студентов',
+            ENROLLMENT: 'Движение контингента студентов. О зачислении студентов на обучение на первый курс'
+        };
+
+        const signatureByType = {
+            TRANSFER_NEXT_COURSE: 'Проректор УлГТУ\nпо работе с контингентом студентов',
+            TRANSFER_DIRECTION: 'Проректор УлГТУ\nпо работе с контингентом студентов',
+            ACADEMIC_LEAVE: 'Проректор УлГТУ',
+            EXPULSION: 'Ректор УлГТУ',
+            ENROLLMENT: 'Проректор по учебной работе УлГТУ'
+        };
+
+        const parseIsoDate = (value) => {
+            const match = String(value || '').match(/^(\d{4})-(\d{2})-(\d{2})$/);
+            if (!match) return null;
+            return {
+                year: Number(match[1]),
+                month: Number(match[2]),
+                day: Number(match[3])
+            };
+        };
+
+        const pad = (value) => String(value).padStart(2, '0');
+
+        const formatFullDate = (isoDate) => {
+            const parsed = parseIsoDate(isoDate);
+            if (!parsed) return '«__» __________ ____ г.';
+            return `«${pad(parsed.day)}» ${months[parsed.month - 1]} ${parsed.year} г.`;
+        };
+
+        const formatShortDate = (isoDate) => {
+            const parsed = parseIsoDate(isoDate);
+            if (!parsed) return '—';
+            return `${pad(parsed.day)}.${pad(parsed.month)}.${parsed.year}`;
+        };
+
+        const toNumberedList = (text) => {
+            const raw = String(text || '').trim();
+            if (!raw) return '1) ____________________________________________';
+            if (/^\d+\)\s+/m.test(raw)) return raw;
+            const parts = raw.split(',').map((item) => item.trim()).filter(Boolean);
+            if (parts.length <= 1) return raw;
+            return parts.map((item, index) => `${index + 1}) ${item}`).join('\n');
+        };
+
+        const createParagraph = (container, text, className = 'paragraph') => {
+            const p = document.createElement('p');
+            p.className = className;
+            p.textContent = text;
+            container.appendChild(p);
+        };
+
+        const splitNumberedList = (text) => {
+            const normalized = String(text || '').replace(/\r/g, '\n').trim();
+            if (!normalized) return [];
+            const matches = normalized.match(/\d+\)\s[\s\S]*?(?=(?:\n\d+\)\s)|$)/g);
+            if (matches && matches.length) {
+                return matches.map(item => item.trim()).filter(Boolean);
+            }
+            return normalized.split(/\n+/).map(item => item.trim()).filter(Boolean);
+        };
+
+        const renderStudentsList = (container, text) => {
+            const items = splitNumberedList(toNumberedList(text));
+            if (!items.length) {
+                createParagraph(container, '1) ____________________________________________', 'paragraph students-list-item');
+                return;
+            }
+
+            items.forEach((item) => {
+                const normalizedItem = item.replace(/студент\(ку\)/g, 'студент(ка)').trim();
+                const basisIndex = normalizedItem.indexOf(' Основание:');
+                if (basisIndex > 0) {
+                    const mainLine = normalizedItem.slice(0, basisIndex).trim();
+                    const basisLine = normalizedItem.slice(basisIndex + 1).trim();
+                    createParagraph(container, mainLine, 'paragraph students-list-item');
+                    createParagraph(container, basisLine, 'paragraph students-basis');
+                } else {
+                    createParagraph(container, normalizedItem, 'paragraph students-list-item');
+                }
+            });
+        };
+
+        const renderBody = (order) => {
+            const body = document.getElementById('printBody');
+            body.innerHTML = '';
+            const type = order.type;
+            const listText = toNumberedList(order.studentsList);
+
+            if (type === 'TRANSFER_NEXT_COURSE') {
+                createParagraph(body, 'В связи с успешным завершением промежуточной аттестации и отсутствием академических задолженностей по результатам учебного семестра, в соответствии с Положением об организации образовательного процесса и о текущем контроле успеваемости промежуточной аттестации обучающихся студентов в УлГТУ, утверждёнными приказом ректора.');
+                createParagraph(body, 'ПРИКАЗЫВАЮ:', 'command-title');
+                createParagraph(body, 'Признать успешно завершившими промежуточную аттестацию и перевести следующих студентов на следующий курс учебного года в соответствии с приведённым ниже списком:');
+                renderStudentsList(body, listText);
+                return;
+            }
+
+            if (type === 'TRANSFER_DIRECTION') {
+                createParagraph(body, 'На основании заявления студента и в соответствии с положением и регламентом УлГТУ об образовании.');
+                createParagraph(body, 'ПРИКАЗЫВАЮ:', 'command-title');
+                createParagraph(body, 'Перевести следующих студентов по их собственному желанию на другое направление и другую группу в соответствии с приведённым списком:');
+                renderStudentsList(body, listText);
+                return;
+            }
+
+            if (type === 'ACADEMIC_LEAVE') {
+                createParagraph(body, 'В соответствии с российским законодательством на основании Федерального закона "Об образовании в Российской Федерации", Положения и регламента о порядке предоставления академических отпусков в УлГТУ.');
+                createParagraph(body, 'ПРИКАЗЫВАЮ:', 'command-title command-title-left');
+                createParagraph(body, 'Предоставить академический отпуск следующим студентам в связи с личными (семейными) обстоятельствами, либо связанные с состоянием здоровья, в соответствии с приведённым списком:');
+                renderStudentsList(body, listText);
+                return;
+            }
+
+            if (type === 'EXPULSION') {
+                createParagraph(body, 'На основании устава Ульяновского государственного технического университета и в соответствии с законодательством Российской Федерации.');
+                createParagraph(body, 'ПРИКАЗЫВАЮ:', 'command-title');
+                if (order.expelDate) {
+                    createParagraph(body, `Считать отчисленными с ${formatShortDate(order.expelDate)} по собственному желанию студентов в соответствии с приведённым списком:`);
+                } else {
+                    createParagraph(body, 'Считать отчисленными по собственному желанию студентов в соответствии с приведённым списком:');
+                }
+                renderStudentsList(body, listText);
+                if (order.contractInfo) {
+                    createParagraph(body, order.contractInfo);
+                }
+                createParagraph(body, `Основание: ${order.basis || 'заявление студента с визой декана'}.`);
+                return;
+            }
+
+            if (type === 'ENROLLMENT') {
+                createParagraph(body, 'На основании Правил приёма в Ульяновский государственный технический университет и решения приёмной комиссии в соответствии с законодательством.');
+                createParagraph(body, 'ПРИКАЗЫВАЮ:', 'command-title command-title-left');
+                renderStudentsList(body, listText);
+                return;
+            }
+
+            createParagraph(body, order.text || 'Текст приказа отсутствует', 'paragraph students-list');
+            if (order.studentsList) {
+                renderStudentsList(body, order.studentsList);
+            }
+        };
+
+        const showError = (message) => {
+            const sheet = document.getElementById('printSheet');
+            if (sheet) {
+                sheet.remove();
+            }
+            const error = document.createElement('div');
+            error.className = 'print-error';
+            error.textContent = message;
+            document.body.appendChild(error);
+        };
+
+        const renderOrder = (order) => {
+            document.getElementById('metaFullDate').textContent = formatFullDate(order.orderDate);
+            document.getElementById('metaOrderNumber').textContent = order.number || '—';
+            document.getElementById('subjectTitle').textContent = subjectByType[order.type] || 'Движение контингента студентов';
+
+            const signDateLabel = document.getElementById('signDateLabel');
+            signDateLabel.textContent = order.type === 'ENROLLMENT' ? 'Дата подписи:' : 'Дата подписи приказа:';
+            document.getElementById('signDateValue').textContent = formatShortDate(order.signDate || order.orderDate);
+            document.getElementById('signatureRole').textContent = signatureByType[order.type] || (order.signerPosition || 'Подписант');
+
+            renderBody(order);
+        };
+
+        const load = async () => {
+            const params = new URLSearchParams(window.location.search);
+            const idRaw = params.get('id');
+            const id = idRaw ? Number(idRaw) : NaN;
+            if (!Number.isFinite(id)) {
+                showError('Не указан корректный идентификатор приказа.');
+                return;
+            }
+            try {
+                const response = await fetch(`/api/orders/${id}`);
+                if (!response.ok) {
+                    throw new Error(`Ошибка загрузки приказа: ${response.status}`);
+                }
+                const order = await response.json();
+                renderOrder(order);
+            } catch (error) {
+                showError(error.message || 'Не удалось загрузить приказ.');
+            }
+        };
+
+        load().catch((error) => showError(error.message || 'Не удалось загрузить приказ.'));
+    })();
+</script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Отчёты — Университет</title>
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+          crossorigin="anonymous">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/css/app.css?v=20260420-18">
+</head>
+
+<body>
+<div id="appHeaderMount" data-active="reports"></div>
+<main class="page-shell" id="reportsPage">
+    <div class="container">
+        <div class="mb-4">
+            <p class="section-title mb-1">Количественный анализ</p>
+            <h1 class="h3 fw-bold text-uppercase mb-0">Контингент студентов</h1>
+        </div>
+
+        <div class="card-glass p-3 p-md-4 mb-4">
+            <div class="row g-3 align-items-end">
+                <div class="col-12 col-md-6 col-lg-3">
+                    <label class="form-label text-muted small text-uppercase">Период с</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="reportFrom" placeholder="дд.мм.гггг">
+                        <button class="btn btn-outline-dark" type="button" id="reportFromPicker" aria-label="Выбрать дату начала">
+                            <i class="bi bi-calendar3"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-lg-3">
+                    <label class="form-label text-muted small text-uppercase">Период по</label>
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="reportTo" placeholder="дд.мм.гггг">
+                        <button class="btn btn-outline-dark" type="button" id="reportToPicker" aria-label="Выбрать дату окончания">
+                            <i class="bi bi-calendar3"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="d-flex flex-wrap justify-content-lg-end gap-2">
+                        <button class="btn btn-outline-dark" type="button" id="reloadReports">
+                            <i class="bi bi-arrow-clockwise me-1"></i>Обновить
+                        </button>
+                        <button class="btn btn-outline-dark" type="button" id="resetReportFilters">
+                            <i class="bi bi-x-lg me-1"></i>Сбросить
+                        </button>
+                        <button class="btn btn-dark" type="button" id="applyReportFilters">
+                            <i class="bi bi-graph-up me-1"></i>Построить отчёт
+                        </button>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="small text-muted report-date-hint">
+                        Отчёт строится по истории статусов за выбранный период.
+                        В выборку попадают все состояния студентов, которые пересекаются с интервалом дат.
+                        Один и тот же студент может попасть в статистику нескольких курсов и статусов, если смена произошла внутри периода.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-lg-3">
+                <div class="card-glass p-3 h-100">
+                    <p class="text-muted small text-uppercase mb-1">Всего</p>
+                    <p class="display-6 fw-bold mb-0" id="reportTotal">—</p>
+                </div>
+            </div>
+            <div class="col-6 col-lg-2">
+                <div class="card-glass p-3 h-100">
+                    <p class="text-muted small text-uppercase mb-1">Обучаются</p>
+                    <p class="display-6 fw-bold text-success mb-0" id="reportActive">—</p>
+                </div>
+            </div>
+            <div class="col-6 col-lg-2">
+                <div class="card-glass p-3 h-100">
+                    <p class="text-muted small text-uppercase mb-1">Академ</p>
+                    <p class="display-6 fw-bold text-warning mb-0" id="reportAcademic">—</p>
+                </div>
+            </div>
+            <div class="col-6 col-lg-2">
+                <div class="card-glass p-3 h-100">
+                    <p class="text-muted small text-uppercase mb-1">Отчислены</p>
+                    <p class="display-6 fw-bold text-danger mb-0" id="reportExpelled">—</p>
+                </div>
+            </div>
+            <div class="col-6 col-lg-3">
+                <div class="card-glass p-3 h-100">
+                    <p class="text-muted small text-uppercase mb-1">Выпустились</p>
+                    <p class="display-6 fw-bold text-primary mb-0" id="reportGraduated">—</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-glass p-3 p-md-4">
+            <ul class="nav nav-tabs report-tabs mb-3" id="reportTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active d-flex align-items-center gap-2" id="faculty-tab" data-bs-toggle="tab" data-bs-target="#faculty-pane" type="button" role="tab" aria-controls="faculty-pane" aria-selected="true">
+                        <span>По факультетам</span>
+                        <span class="badge text-bg-light" id="facultyCount">0</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link d-flex align-items-center gap-2" id="direction-tab" data-bs-toggle="tab" data-bs-target="#direction-pane" type="button" role="tab" aria-controls="direction-pane" aria-selected="false">
+                        <span>По направлениям</span>
+                        <span class="badge text-bg-light" id="directionCount">0</span>
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link d-flex align-items-center gap-2" id="group-tab" data-bs-toggle="tab" data-bs-target="#group-pane" type="button" role="tab" aria-controls="group-pane" aria-selected="false">
+                        <span>По группам</span>
+                        <span class="badge text-bg-light" id="groupCount">0</span>
+                    </button>
+                </li>
+            </ul>
+
+            <div class="tab-content" id="reportTabsContent">
+                <div class="tab-pane fade show active" id="faculty-pane" role="tabpanel" aria-labelledby="faculty-tab" tabindex="0">
+                    <div class="table-responsive">
+                        <table class="table table-clean align-middle mb-0">
+                            <thead>
+                            <tr>
+                                <th>Факультет</th>
+                                <th class="text-end">Всего</th>
+                                <th class="text-end">Обучаются</th>
+                                <th class="text-end">Академ</th>
+                                <th class="text-end">Отчислены</th>
+                                <th class="text-end">Выпустились</th>
+                            </tr>
+                            </thead>
+                            <tbody id="facultyReportBody">
+                            <tr><td colspan="6" class="text-center text-muted py-3">Загрузка...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mt-3 report-pagination-controls">
+                        <div class="d-flex align-items-center gap-2 flex-wrap">
+                            <span class="text-muted small text-uppercase">На странице</span>
+                            <select class="form-select form-select-sm w-auto" id="facultyReportPageSize">
+                                <option value="5">5</option>
+                                <option value="10" selected>10</option>
+                                <option value="20">20</option>
+                                <option value="50">50</option>
+                                <option value="100">100</option>
+                            </select>
+                            <button class="btn btn-outline-dark btn-sm" type="button" id="facultyReportShowAll">Показать все</button>
+                        </div>
+                        <div class="d-flex align-items-center gap-1 flex-wrap">
+                            <button class="btn btn-outline-dark btn-sm px-2" id="facultyReportPageFirst" type="button">&lt;&lt;</button>
+                            <button class="btn btn-outline-dark btn-sm px-2" id="facultyReportPagePrev" type="button">&lt;</button>
+                            <div class="d-flex align-items-center gap-1" id="facultyReportPageNumbers"></div>
+                            <button class="btn btn-outline-dark btn-sm px-2" id="facultyReportPageNext" type="button">&gt;</button>
+                            <button class="btn btn-outline-dark btn-sm px-2" id="facultyReportPageLast" type="button">&gt;&gt;</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="direction-pane" role="tabpanel" aria-labelledby="direction-tab" tabindex="0">
+                    <div class="report-pane-grid">
+                        <div class="report-filters-column">
+                            <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
+                                <label class="form-label text-muted small text-uppercase mb-0">Фильтры</label>
+                                <button class="btn btn-outline-dark btn-sm" type="button" id="directionFiltersClear">Сбросить</button>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small text-uppercase mb-1">Факультеты</label>
+                                <div class="report-checklist" id="directionFacultyFilters"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small text-uppercase mb-1" for="directionSortBy">Сортировка</label>
+                                <select class="form-select form-select-sm" id="directionSortBy">
+                                    <option value="alpha" selected>По алфавиту</option>
+                                    <option value="faculty">По факультету</option>
+                                    <option value="direction">По направлению</option>
+                                </select>
+                            </div>
+                            <div class="mb-0">
+                                <label class="form-label text-muted small text-uppercase mb-1" for="directionSortDir">Направление сортировки</label>
+                                <select class="form-select form-select-sm" id="directionSortDir">
+                                    <option value="asc" selected>По возрастанию</option>
+                                    <option value="desc">По убыванию</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="report-table-column">
+                            <div class="table-responsive">
+                                <table class="table table-clean align-middle mb-0">
+                                    <thead>
+                                    <tr>
+                                        <th>Направление</th>
+                                        <th>Факультет</th>
+                                        <th class="text-end">Всего</th>
+                                        <th class="text-end">Обучаются</th>
+                                        <th class="text-end">Академ</th>
+                                        <th class="text-end">Отчислены</th>
+                                        <th class="text-end">Выпустились</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="directionReportBody">
+                                    <tr><td colspan="7" class="text-center text-muted py-3">Загрузка...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mt-3 report-pagination-controls">
+                                <div class="d-flex align-items-center gap-2 flex-wrap">
+                                    <span class="text-muted small text-uppercase">На странице</span>
+                                    <select class="form-select form-select-sm w-auto" id="directionReportPageSize">
+                                        <option value="5">5</option>
+                                        <option value="10" selected>10</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                    <button class="btn btn-outline-dark btn-sm" type="button" id="directionReportShowAll">Показать все</button>
+                                </div>
+                                <div class="d-flex align-items-center gap-1 flex-wrap">
+                                    <button class="btn btn-outline-dark btn-sm px-2" id="directionReportPageFirst" type="button">&lt;&lt;</button>
+                                    <button class="btn btn-outline-dark btn-sm px-2" id="directionReportPagePrev" type="button">&lt;</button>
+                                    <div class="d-flex align-items-center gap-1" id="directionReportPageNumbers"></div>
+                                    <button class="btn btn-outline-dark btn-sm px-2" id="directionReportPageNext" type="button">&gt;</button>
+                                    <button class="btn btn-outline-dark btn-sm px-2" id="directionReportPageLast" type="button">&gt;&gt;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-pane fade" id="group-pane" role="tabpanel" aria-labelledby="group-tab" tabindex="0">
+                    <div class="report-pane-grid">
+                        <div class="report-filters-column">
+                            <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
+                                <label class="form-label text-muted small text-uppercase mb-0">Фильтры</label>
+                                <button class="btn btn-outline-dark btn-sm" type="button" id="groupFiltersClear">Сбросить</button>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small text-uppercase mb-1">Факультеты</label>
+                                <div class="report-checklist" id="groupFacultyFilters"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small text-uppercase mb-1">Направления</label>
+                                <div class="report-checklist" id="groupDirectionFilters"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small text-uppercase mb-1">Курс</label>
+                                <div class="report-checklist" id="groupCourseFilters"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small text-uppercase mb-1" for="groupSortBy">Сортировка</label>
+                                <select class="form-select form-select-sm" id="groupSortBy">
+                                    <option value="alpha" selected>По алфавиту</option>
+                                    <option value="faculty">По факультету</option>
+                                    <option value="direction">По направлению</option>
+                                    <option value="course">По курсу</option>
+                                </select>
+                            </div>
+                            <div class="mb-0">
+                                <label class="form-label text-muted small text-uppercase mb-1" for="groupSortDir">Направление сортировки</label>
+                                <select class="form-select form-select-sm" id="groupSortDir">
+                                    <option value="asc" selected>По возрастанию</option>
+                                    <option value="desc">По убыванию</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="report-table-column">
+                            <div class="table-responsive">
+                                <table class="table table-clean align-middle mb-0">
+                                    <thead>
+                                    <tr>
+                                        <th>Группа</th>
+                                        <th>Факультет</th>
+                                        <th>Направление</th>
+                                        <th class="text-end">Всего</th>
+                                        <th class="text-end">Обучаются</th>
+                                        <th class="text-end">Академ</th>
+                                        <th class="text-end">Отчислены</th>
+                                        <th class="text-end">Выпустились</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="groupReportBody">
+                                    <tr><td colspan="8" class="text-center text-muted py-3">Загрузка...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-2 mt-3 report-pagination-controls">
+                                <div class="d-flex align-items-center gap-2 flex-wrap">
+                                    <span class="text-muted small text-uppercase">На странице</span>
+                                    <select class="form-select form-select-sm w-auto" id="groupReportPageSize">
+                                        <option value="5">5</option>
+                                        <option value="10" selected>10</option>
+                                        <option value="20">20</option>
+                                        <option value="50">50</option>
+                                        <option value="100">100</option>
+                                    </select>
+                                    <button class="btn btn-outline-dark btn-sm" type="button" id="groupReportShowAll">Показать все</button>
+                                </div>
+                                <div class="d-flex align-items-center gap-1 flex-wrap">
+                                    <button class="btn btn-outline-dark btn-sm px-2" id="groupReportPageFirst" type="button">&lt;&lt;</button>
+                                    <button class="btn btn-outline-dark btn-sm px-2" id="groupReportPagePrev" type="button">&lt;</button>
+                                    <div class="d-flex align-items-center gap-1" id="groupReportPageNumbers"></div>
+                                    <button class="btn btn-outline-dark btn-sm px-2" id="groupReportPageNext" type="button">&gt;</button>
+                                    <button class="btn btn-outline-dark btn-sm px-2" id="groupReportPageLast" type="button">&gt;&gt;</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<script src="/js/layout.js?v=20260420-01"></script>
+<script src="/js/app.js?v=20260422-99"></script>
+
+</body>
+</html>

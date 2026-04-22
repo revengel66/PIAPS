@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8081
 
 spring:
   datasource:
@@ -9,7 +9,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: true
     properties:
       hibernate:
@@ -17,11 +17,17 @@ spring:
     defer-datasource-initialization: true
   sql:
     init:
-      mode: always
-  thymeleaf:
-    cache: false
+      mode: never
+
+app:
+  seed:
+    enabled: true
+    key: main-data-v1
+    script: classpath:data.sql
 
 logging:
+  file:
+    name: piaps.log
   level:
     org.hibernate.SQL: warn
     org.springframework.web: info

@@ -2,7 +2,9 @@ package ru.university.piaps.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +46,30 @@ public class OrderController {
     @PutMapping("/{id}")
     public OrderDto update(@PathVariable Long id, @RequestBody @Valid OrderRequest request) {
         return orderService.update(id, request);
+    }
+
+    @PostMapping("/{id}/execute")
+    public OrderDto execute(@PathVariable Long id) {
+        return orderService.execute(id);
+    }
+
+    @PostMapping("/{id}/sign")
+    public OrderDto sign(@PathVariable Long id) {
+        return orderService.sign(id);
+    }
+
+    @PostMapping("/{id}/rollback")
+    public OrderDto rollback(@PathVariable Long id) {
+        return orderService.rollback(id);
+    }
+
+    @GetMapping(value = "/{id}/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> pdf(@PathVariable Long id) {
+        byte[] pdf = orderService.buildPdf(id);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .header("Content-Disposition", "inline; filename=order-" + id + ".pdf")
+                .body(pdf);
     }
 
     @DeleteMapping("/{id}")

@@ -10,5 +10,9 @@ public interface OrderService {
     OrderDto findById(Long id);
     OrderDto create(OrderRequest request);
     OrderDto update(Long id, OrderRequest request);
+    OrderDto execute(Long id);
+    OrderDto sign(Long id);
+    OrderDto rollback(Long id);
+    byte[] buildPdf(Long id);
     void delete(Long id);
 }

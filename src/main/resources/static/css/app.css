@@ -14,32 +14,122 @@ body {
     padding-bottom: 3rem;
 }
 
-.nav-top {
+.app-header-bar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
     border-radius: 20px;
     background: #fff;
     padding: 0.75rem 1.25rem;
     box-shadow: 0 20px 35px rgba(15, 23, 42, 0.08);
 }
 
+.app-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    text-decoration: none;
+    color: #111827;
+}
+
+.app-brand:hover {
+    color: #111827;
+}
+
+.app-brand-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #0f172a, #1f2937);
+    color: #fff;
+    box-shadow: 0 8px 16px rgba(15, 23, 42, 0.25);
+}
+
+.app-brand-text {
+    display: inline-flex;
+    flex-direction: column;
+    line-height: 1.05;
+}
+
+.app-brand-title {
+    font-size: 0.92rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+.app-brand-subtitle {
+    font-size: 0.74rem;
+    color: #6b7280;
+    letter-spacing: 0.03em;
+}
+
+.nav-top {
+    margin-left: auto;
+    justify-content: flex-end;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
 .nav-top .nav-link {
-    color: #212529;
+    color: #273043;
     font-weight: 600;
-    opacity: 0.7;
+    opacity: 0.85;
+    border-radius: 12px;
+    padding: 0.45rem 0.8rem;
+    position: relative;
+    transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.nav-top .nav-link:hover {
+    opacity: 1;
+    color: #111827;
+}
+
+.nav-top.nav-pills .nav-link.active,
+.nav-top.nav-pills .show > .nav-link {
+    color: #111827;
+    background-color: transparent;
 }
 
 .nav-top .nav-link.active,
-.nav-top .nav-link:hover {
+.nav-top .nav-link.active:hover {
     opacity: 1;
-    color: var(--accent);
+    color: #111827;
+    background: transparent;
+    box-shadow: none;
+}
+
+.nav-top .nav-link:focus-visible {
+    outline: 2px solid rgba(17, 24, 39, 0.24);
+    outline-offset: 2px;
+    background: transparent;
 }
 
 .nav-top .nav-link.active::after {
     content: "";
     display: block;
-    margin-top: 4px;
-    height: 3px;
-    background: var(--accent);
+    margin-top: 6px;
+    height: 2px;
+    background: #111827;
     border-radius: 999px;
+    opacity: 0.8;
+}
+
+@media (max-width: 991.98px) {
+    .app-header-bar {
+        align-items: flex-start;
+    }
+
+    .nav-top {
+        width: 100%;
+        margin-left: 0;
+        justify-content: flex-start;
+    }
 }
 
 .card-glass {
@@ -47,6 +137,23 @@ body {
     border: 1px solid rgba(15, 23, 42, 0.08);
     background: #fff;
     box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
+}
+
+.dashboard-card {
+    color: inherit;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.dashboard-card:hover {
+    color: inherit;
+    transform: translateY(-3px);
+    border-color: rgba(15, 23, 42, 0.16);
+    box-shadow: 0 24px 44px rgba(15, 23, 42, 0.16);
+}
+
+.dashboard-card:focus-visible {
+    outline: 2px solid rgba(17, 24, 39, 0.24);
+    outline-offset: 2px;
 }
 
 .btn-accent {
@@ -72,9 +179,366 @@ body {
     border-top: none;
 }
 
+.table-clean {
+    table-layout: fixed;
+    width: 100%;
+}
+
 .table-clean tbody td {
     vertical-align: middle;
     border-color: rgba(0, 0, 0, 0.04);
+}
+
+.table-clean thead th:not(:last-child),
+.table-clean tbody td:not(:last-child) {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.table-clean thead th:last-child,
+.table-clean tbody td:last-child {
+    width: 150px;
+}
+
+.table-order-student-selector thead th:last-child,
+.table-order-student-selector tbody td:last-child {
+    width: 90px;
+}
+
+
+
+.table-directions {
+    table-layout: auto;
+}
+
+.table-directions th.col-code,
+.table-directions td.col-code,
+.table-directions th.col-short,
+.table-directions td.col-short,
+.table-directions th.col-tuition,
+.table-directions td.col-tuition,
+.table-directions th.col-students,
+.table-directions td.col-students,
+.table-directions thead th:last-child,
+.table-directions tbody td:last-child {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.table-directions th.col-name,
+.table-directions td.col-name {
+    width: 20rem;
+    max-width: 20rem;
+}
+
+.table-directions th.col-faculty,
+.table-directions td.col-faculty {
+    width: 14rem;
+    max-width: 14rem;
+}
+
+.table-faculties {
+    table-layout: auto;
+}
+
+.table-faculties th.col-name,
+.table-faculties td.col-name {
+    width: 100%;
+}
+
+.table-faculties th.col-short,
+.table-faculties td.col-short,
+.table-faculties thead th:last-child,
+.table-faculties tbody td:last-child {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.table-groups {
+    table-layout: auto;
+}
+
+.table-groups th.col-name,
+.table-groups td.col-name,
+.table-groups th.col-course,
+.table-groups td.col-course,
+.table-groups th.col-students,
+.table-groups td.col-students,
+.table-groups th.col-actions,
+.table-groups td.col-actions,
+.table-groups thead th:last-child,
+.table-groups tbody td:last-child {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.table-groups th.col-direction,
+.table-groups td.col-direction {
+    width: 18rem;
+    max-width: 18rem;
+}
+
+.table-groups th.col-faculty,
+.table-groups td.col-faculty {
+    width: 16rem;
+    max-width: 16rem;
+}
+
+.table-students {
+    table-layout: auto;
+}
+
+.table-students th.col-course,
+.table-students td.col-course,
+.table-students th.col-group,
+.table-students td.col-group,
+.table-students th.col-record-book,
+.table-students td.col-record-book,
+.table-students th.col-status,
+.table-students td.col-status,
+.table-students th.col-actions,
+.table-students td.col-actions,
+.table-students thead th:last-child,
+.table-students tbody td:last-child {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.table-students th.col-fio,
+.table-students td.col-fio {
+    width: 15rem;
+    max-width: 15rem;
+}
+
+.table-students th.col-direction,
+.table-students td.col-direction {
+    width: 15rem;
+    max-width: 15rem;
+}
+
+.table-students th.col-faculty,
+.table-students td.col-faculty {
+    width: 12rem;
+    max-width: 12rem;
+}
+
+.table-order-student-selector {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.table-order-student-selector th.col-check,
+.table-order-student-selector td.col-check {
+    width: 24px;
+    max-width: 24px;
+}
+
+.table-order-student-selector th.col-group,
+.table-order-student-selector td.col-group,
+.table-order-student-selector th.col-record-book,
+.table-order-student-selector td.col-record-book,
+.table-order-student-selector th.col-status,
+.table-order-student-selector td.col-status {
+    width: 8%;
+    white-space: nowrap;
+}
+
+.table-order-student-selector th.col-fio,
+.table-order-student-selector td.col-fio {
+    width: 9rem;
+    max-width: 9rem;
+}
+
+.table-order-student-selector th.col-direction,
+.table-order-student-selector td.col-direction {
+    width: 12rem;
+    max-width: 12rem;
+}
+
+.table-order-student-selector th.col-faculty,
+.table-order-student-selector td.col-faculty {
+    width: 8rem;
+    max-width: 8rem;
+}
+
+.table-orders th.col-id,
+.table-orders td.col-id,
+.table-orders th.col-status,
+.table-orders td.col-status {
+    width: 8%;
+    white-space: nowrap;
+}
+
+.table-orders th.col-number,
+.table-orders td.col-number {
+    width: 8.5rem;
+    max-width: 8.5rem;
+    white-space: nowrap;
+}
+
+.table-orders th.col-date,
+.table-orders td.col-date {
+    width: 7.5rem;
+    max-width: 7.5rem;
+    white-space: nowrap;
+}
+
+.table-orders th.col-type,
+.table-orders td.col-type {
+    width: 10.5rem;
+    max-width: 10.5rem;
+    white-space: nowrap;
+}
+
+.table-orders th.col-actions,
+.table-orders td.col-actions {
+    min-width: 13rem;
+    width: 13rem;
+    white-space: nowrap;
+}
+
+.table-curriculums {
+    table-layout: auto;
+}
+
+.table-curriculums th.col-course,
+.table-curriculums td.col-course,
+.table-curriculums th.col-semester,
+.table-curriculums td.col-semester,
+.table-curriculums th.col-hours,
+.table-curriculums td.col-hours {
+    width: 1%;
+    white-space: nowrap;
+}
+
+.table-curriculums th.col-discipline,
+.table-curriculums td.col-discipline {
+    width: 24rem;
+    max-width: 24rem;
+}
+
+.table-curriculums th.col-attestation,
+.table-curriculums td.col-attestation {
+    width: 17rem;
+    max-width: 17rem;
+}
+
+.table-curriculums th.col-direction,
+.table-curriculums td.col-direction,
+.table-curriculums th.col-faculty,
+.table-curriculums td.col-faculty {
+    width: 14rem;
+    max-width: 14rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.curriculum-plan-year-select {
+    width: 12rem;
+}
+
+.curriculum-flat-block {
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 18px;
+    background: #fff;
+}
+
+.curriculum-diff-layout .curriculum-course-tabs .nav-link {
+    font-size: 0.92rem;
+}
+
+.curriculum-diff-layout > [class*='col-'] {
+    display: flex;
+}
+
+.curriculum-diff-layout > [class*='col-'] > .curriculum-flat-block {
+    width: 100%;
+}
+
+.curriculum-diff-table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.curriculum-diff-table thead th,
+.curriculum-diff-table tbody td {
+    white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: clip !important;
+    word-break: break-word;
+}
+
+.curriculum-diff-table th.col-semester,
+.curriculum-diff-table td.col-semester,
+.curriculum-diff-table th.col-hours,
+.curriculum-diff-table td.col-hours {
+    width: 5.5rem;
+    white-space: nowrap !important;
+    word-break: normal;
+}
+
+.curriculum-diff-table th.col-discipline,
+.curriculum-diff-table td.col-discipline {
+    width: auto;
+    max-width: none;
+}
+
+.curriculum-diff-table th.col-attestation,
+.curriculum-diff-table td.col-attestation {
+    width: 11.5rem;
+    max-width: none;
+}
+
+.curriculum-diff-table thead th:last-child,
+.curriculum-diff-table tbody td:last-child {
+    width: 11.5rem;
+}
+
+.curriculum-diff-table tbody tr.curriculum-row-match td {
+    background: rgba(22, 163, 74, 0.1);
+}
+
+.curriculum-diff-table tbody tr.curriculum-row-diff td {
+    background: rgba(245, 158, 11, 0.12);
+}
+
+.curriculum-diff-table tbody tr.curriculum-row-empty td {
+    color: #adb5bd;
+}
+
+.curriculum-course-tabs .nav-link {
+    text-align: left;
+    margin-bottom: 0.35rem;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    color: #495057;
+    font-weight: 600;
+}
+
+.curriculum-course-tabs .nav-link.active {
+    background-color: rgba(102, 58, 212, 0.12);
+    border-color: var(--accent);
+    color: var(--accent);
+}
+
+.curriculum-semester-tabs .nav-link {
+    font-weight: 600;
+    color: #495057;
+}
+
+.table-clean tbody td .badge {
+    max-width: 100%;
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.table-clean tr > th.text-end:last-child,
+.table-clean tr > td.text-end:last-child {
+    padding-right: 0;
 }
 
 .pill {
@@ -91,6 +555,10 @@ body {
     border-radius: 24px;
     border: 1px solid rgba(15, 23, 42, 0.06);
     box-shadow: 0 30px 50px rgba(15, 23, 42, 0.12);
+}
+
+.modal-xxl {
+    --bs-modal-width: 1440px;
 }
 
 .section-title {
@@ -147,8 +615,155 @@ body {
     color: var(--accent);
 }
 
+.report-tabs {
+    border-bottom: 1px solid rgba(15, 23, 42, 0.12);
+}
+
+.report-tabs .nav-link {
+    color: #495057;
+    font-weight: 600;
+    border: none;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    background: transparent;
+    padding: 0.55rem 0.8rem;
+}
+
+.report-tabs .nav-link:hover {
+    color: #111827;
+    border-bottom-color: rgba(17, 24, 39, 0.4);
+}
+
+.report-tabs .nav-link.active,
+.report-tabs .nav-link.active:hover {
+    color: #111827;
+    background: transparent;
+    border-color: transparent transparent #111827 transparent;
+}
+
+.report-checklist {
+    max-height: 180px;
+    overflow: auto;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    border-radius: 12px;
+    padding: 0.5rem 0.7rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 0.35rem 0.75rem;
+    background: #fff;
+}
+
+.report-checklist .form-check {
+    margin: 0;
+}
+
+.report-pane-grid {
+    display: grid;
+    grid-template-columns: minmax(240px, 300px) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+}
+
+.report-filters-column {
+    position: sticky;
+    top: 0.5rem;
+    align-self: start;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 14px;
+    padding: 0.75rem;
+    background: #fff;
+}
+
+.report-filters-column .mb-3:last-child {
+    margin-bottom: 0 !important;
+}
+
+.report-filters-column .report-checklist {
+    grid-template-columns: 1fr;
+    max-height: 220px;
+}
+
+.report-table-column .table-responsive {
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 14px;
+    overflow: auto;
+    background: #fff;
+}
+
+.report-date-hint {
+    border-top: 1px dashed rgba(15, 23, 42, 0.14);
+    padding-top: 0.55rem;
+}
+
+@media (max-width: 991.98px) {
+    .report-pane-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .report-filters-column {
+        position: static;
+    }
+}
+
 .info-tile {
     border-radius: 16px;
     background: rgba(0, 0, 0, 0.03);
     padding: 0.75rem 1rem;
+}
+
+.filter-check-control {
+    min-height: 38px;
+    border: 1px solid var(--bs-border-color, #dee2e6);
+    border-radius: var(--bs-border-radius, 0.375rem);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0.375rem 0.75rem;
+}
+
+.filter-check-control .form-check {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+
+.filter-check-control .form-check-input {
+    margin: 0;
+    flex: 0 0 auto;
+}
+
+.student-field-align-bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.student-group-picker {
+    position: relative;
+}
+
+.student-group-search-wrap {
+    position: relative;
+}
+
+.student-group-suggestions {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% - 0.35rem);
+    z-index: 1065;
+    max-height: 220px;
+    overflow: auto;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
+    margin-bottom: 0;
+    background: #fff;
+}
+
+.filter-check-control .form-check-label {
+    margin: 0;
+    line-height: 1.2;
+    user-select: none;
 }

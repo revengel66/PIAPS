@@ -6,6 +6,7 @@ import lombok.Data;
 import ru.university.piaps.model.OrderType;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class OrderRequest {
@@ -22,6 +23,8 @@ public class OrderRequest {
     private String signerPosition;
     private String signerName;
     private String studentsList;
+    private List<Long> studentIds;
+    private List<OrderStudentItemDto> studentItems;
     private LocalDate periodStart;
     private LocalDate periodEnd;
     private String basis;

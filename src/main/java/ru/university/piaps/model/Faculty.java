@@ -25,9 +25,9 @@ public class Faculty {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String code;
-
-    @Column(nullable = false)
+    @Column(nullable = false, length = 80)
     private String name;
+
+    @Column(name = "short_name", length = 32)
+    private String shortName;
 }

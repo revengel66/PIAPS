@@ -12,6 +12,7 @@ public class ContingentAggregationRow {
     private final String directionName;
     private final Long groupId;
     private final String groupCode;
+    private final Integer groupCourse;
     private final long total;
     private final long active;
     private final long academicLeave;

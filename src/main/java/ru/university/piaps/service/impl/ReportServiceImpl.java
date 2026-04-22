@@ -6,7 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.university.piaps.dto.ContingentAggregationRow;
 import ru.university.piaps.dto.ContingentReportResponse;
 import ru.university.piaps.dto.ContingentReportRow;
-import ru.university.piaps.repository.StudentRepository;
+import ru.university.piaps.repository.StudentStateHistoryRepository;
 import ru.university.piaps.service.ReportService;
 
 import java.time.LocalDate;
@@ -19,15 +19,38 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ReportServiceImpl implements ReportService {
 
-    private final StudentRepository studentRepository;
+    private final StudentStateHistoryRepository historyRepository;
+    private final StudentStateHistoryService historyService;
 
     @Override
     @Transactional(readOnly = true)
     public ContingentReportResponse getContingentReport(LocalDate fromDate, LocalDate toDate) {
-        LocalDate effectiveFrom = fromDate != null ? fromDate : LocalDate.of(1, 1, 1);
-        LocalDate effectiveTo = toDate != null ? toDate : LocalDate.of(9999, 12, 31);
+        historyService.ensureBootstrapped();
 
-        List<ContingentAggregationRow> groupRows = studentRepository.aggregateByGroup(effectiveFrom, effectiveTo);
+        LocalDate normalizedFromDate = fromDate;
+        LocalDate normalizedToDate = toDate;
+        LocalDate today = LocalDate.now();
+        if (normalizedFromDate == null && normalizedToDate == null) {
+            normalizedFromDate = today;
+            normalizedToDate = today;
+        } else if (normalizedFromDate == null) {
+            normalizedFromDate = normalizedToDate;
+        } else if (normalizedToDate == null) {
+            normalizedToDate = normalizedFromDate;
+        }
+        if (normalizedFromDate != null
+                && normalizedToDate != null
+                && normalizedFromDate.isAfter(normalizedToDate)) {
+            LocalDate tmp = normalizedFromDate;
+            normalizedFromDate = normalizedToDate;
+            normalizedToDate = tmp;
+        }
+
+        List<ContingentAggregationRow> groupRows = historyRepository.aggregateByPeriod(
+                normalizedFromDate,
+                normalizedToDate,
+                LocalDate.of(9999, 12, 31)
+        );
 
         List<ContingentReportRow> groups = groupRows.stream()
                 .map(this::toReportRow)
@@ -39,8 +62,8 @@ public class ReportServiceImpl implements ReportService {
         long total = groupRows.stream().mapToLong(ContingentAggregationRow::getTotal).sum();
 
         return ContingentReportResponse.builder()
-                .fromDate(fromDate)
-                .toDate(toDate)
+                .fromDate(normalizedFromDate)
+                .toDate(normalizedToDate)
                 .total(total)
                 .faculties(faculties)
                 .directions(directions)
@@ -69,6 +92,7 @@ public class ReportServiceImpl implements ReportService {
                     .directionName(defaultValue(origin.getDirectionName(), "Без направления"))
                     .groupId(null)
                     .groupCode(null)
+                    .groupCourse(null)
                     .total(t.total)
                     .active(t.active)
                     .academicLeave(t.academicLeave)
@@ -100,6 +124,7 @@ public class ReportServiceImpl implements ReportService {
                     .directionName(null)
                     .groupId(null)
                     .groupCode(null)
+                    .groupCourse(null)
                     .total(t.total)
                     .active(t.active)
                     .academicLeave(t.academicLeave)
@@ -118,6 +143,7 @@ public class ReportServiceImpl implements ReportService {
                 .directionName(defaultValue(row.getDirectionName(), "Без направления"))
                 .groupId(row.getGroupId())
                 .groupCode(row.getGroupCode())
+                .groupCourse(row.getGroupCourse())
                 .total(row.getTotal())
                 .active(row.getActive())
                 .academicLeave(row.getAcademicLeave())

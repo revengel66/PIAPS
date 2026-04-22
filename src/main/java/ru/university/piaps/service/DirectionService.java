@@ -1,5 +1,6 @@
 package ru.university.piaps.service;
 
+import ru.university.piaps.dto.DirectionDeleteTransferRequest;
 import ru.university.piaps.dto.DirectionDto;
 
 import java.util.List;
@@ -9,4 +10,5 @@ public interface DirectionService {
     DirectionDto create(DirectionDto request);
     DirectionDto update(Long id, DirectionDto request);
     void delete(Long id);
+    void deleteWithTransfer(Long id, DirectionDeleteTransferRequest request);
 }

@@ -39,15 +39,30 @@ public class OrderDocument {
     @Column(nullable = false)
     private OrderType type;
 
-    @Column(nullable = false, length = 4000)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String text;
 
     private LocalDate signDate;
     private String signerPosition;
     private String signerName;
 
-    @Column(length = 2000)
+    @Column(columnDefinition = "TEXT")
     private String studentsList;
+
+    @Column(columnDefinition = "TEXT")
+    private String studentIds;
+
+    @Column(columnDefinition = "TEXT")
+    private String studentItemsJson;
+
+    private Boolean executed;
+    private LocalDate executedAt;
+
+    @Column(columnDefinition = "TEXT")
+    private String executionSnapshotJson;
+
+    private Boolean signed;
+    private LocalDate signedAt;
 
     private LocalDate periodStart;
     private LocalDate periodEnd;

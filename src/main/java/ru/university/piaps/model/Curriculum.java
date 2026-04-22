@@ -31,6 +31,9 @@ public class Curriculum {
     @Column(nullable = false)
     private Integer course;
 
+    @Column
+    private Integer semester;
+
     @Column(nullable = false)
     private String discipline;
 
@@ -39,6 +42,21 @@ public class Curriculum {
 
     @Column(nullable = false)
     private String attestation;
+
+    @Column(name = "course_work")
+    private Boolean courseWork;
+
+    @Column(name = "education_level", length = 16)
+    private String educationLevel;
+
+    @Column(name = "education_form", length = 16)
+    private String educationForm;
+
+    @Column(name = "accelerated")
+    private Boolean accelerated;
+
+    @Column(name = "plan_year", nullable = false)
+    private Integer planYear;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "direction_id")
