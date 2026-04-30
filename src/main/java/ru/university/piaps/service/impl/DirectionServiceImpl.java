@@ -351,8 +351,8 @@ public class DirectionServiceImpl implements DirectionService {
         if (normalizedName.isBlank()) {
             throw new BusinessValidationException("Укажите название направления.");
         }
-        if (normalizedName.length() < 6 || normalizedName.length() > 80) {
-            throw new BusinessValidationException("Название направления должно быть от 6 до 80 символов.");
+        if (normalizedName.length() < 2 || normalizedName.length() > 80) {
+            throw new BusinessValidationException("Название направления должно быть от 2 до 80 символов.");
         }
         if (!ALLOWED_NAME_PATTERN.matcher(normalizedName).matches()) {
             throw new BusinessValidationException("Название направления выглядит некорректно.");

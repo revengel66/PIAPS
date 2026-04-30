@@ -15,14 +15,14 @@ import java.time.LocalDate;
 @Data
 public class StudentRequest {
     @NotBlank(message = "Укажите фамилию.")
-    @Size(min = 2, max = 64, message = "Фамилия должна быть длиной от 2 до 64 символов.")
+    @Size(min = 2, max = 40, message = "Фамилия должна быть длиной от 2 до 40 символов.")
     @Pattern(regexp = "^[A-Za-zА-Яа-яЁё\\-]+$", message = "Фамилия выглядит некорректно.")
     private String lastName;
     @NotBlank(message = "Укажите имя.")
-    @Size(min = 2, max = 64, message = "Имя должно быть длиной от 2 до 64 символов.")
+    @Size(min = 2, max = 40, message = "Имя должно быть длиной от 2 до 40 символов.")
     @Pattern(regexp = "^[A-Za-zА-Яа-яЁё\\-]+$", message = "Имя выглядит некорректно.")
     private String firstName;
-    @Size(max = 64, message = "Отчество должно быть длиной от 2 до 64 символов.")
+    @Size(max = 40, message = "Отчество должно быть длиной от 2 до 40 символов.")
     @Pattern(regexp = "^$|^[A-Za-zА-Яа-яЁё\\-]+$", message = "Отчество выглядит некорректно.")
     private String middleName;
     @NotBlank

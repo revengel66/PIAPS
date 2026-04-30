@@ -331,7 +331,7 @@ public class StudentServiceImpl implements StudentService {
             }
             return null;
         }
-        if (normalized.length() < 2 || normalized.length() > 64) {
+        if (normalized.length() < 2 || normalized.length() > 40) {
             throw new BusinessValidationException(getLengthNameMessage(fieldLabel));
         }
         if (!STUDENT_NAME_ALLOWED_PATTERN.matcher(normalized).matches()) {
@@ -354,10 +354,10 @@ public class StudentServiceImpl implements StudentService {
 
     private String getLengthNameMessage(String fieldLabel) {
         return switch (fieldLabel) {
-            case "Фамилия" -> "Фамилия должна быть длиной от 2 до 64 символов.";
-            case "Имя" -> "Имя должно быть длиной от 2 до 64 символов.";
-            case "Отчество" -> "Отчество должно быть длиной от 2 до 64 символов.";
-            default -> "Значение должно быть длиной от 2 до 64 символов.";
+            case "Фамилия" -> "Фамилия должна быть длиной от 2 до 40 символов.";
+            case "Имя" -> "Имя должно быть длиной от 2 до 40 символов.";
+            case "Отчество" -> "Отчество должно быть длиной от 2 до 40 символов.";
+            default -> "Значение должно быть длиной от 2 до 40 символов.";
         };
     }
 

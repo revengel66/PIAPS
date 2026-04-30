@@ -35,7 +35,7 @@ public class Direction {
     @Column(nullable = false, unique = true, length = 8)
     private String code;
 
-    @Column(nullable = false, length = 200)
+    @Column(nullable = false, length = 80)
     private String name;
 
     @Column(name = "short_name", length = 16)

@@ -23,21 +23,27 @@
                 <h1 class="h3 fw-bold text-uppercase mb-0" id="orderFormTitle">Создание приказа</h1>
                 <p class="text-muted mb-0">Заполните общие данные приказа и персональные данные по каждому студенту.</p>
             </div>
-            <div class="d-flex gap-2">
-                <a class="btn btn-outline-dark" href="/orders.html">
-                    <i class="bi bi-arrow-left me-1"></i>К списку приказов
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <a class="btn-circle" href="/orders.html" title="К списку приказов" aria-label="К списку приказов">
+                    <i class="bi bi-arrow-left"></i>
                 </a>
-                <a class="btn btn-outline-dark d-none" id="printOrderBtn" target="_blank" rel="noopener noreferrer">
-                    <i class="bi bi-printer me-1"></i>Печать
+                <a class="btn-circle d-none" id="printOrderBtn" target="_blank" rel="noopener noreferrer" title="Печать" aria-label="Печать">
+                    <i class="bi bi-printer"></i>
                 </a>
-                <button class="btn btn-outline-success d-none" id="executeOrderBtn" type="button">
-                    <i class="bi bi-play-fill me-1"></i>Осуществить
+                <button class="btn-circle text-success d-none" id="executeOrderBtn" type="button" title="Осуществить" aria-label="Осуществить">
+                    <i class="bi bi-play-fill"></i>
                 </button>
-                <button class="btn btn-outline-dark d-none" id="signOrderBtn" type="button">
-                    <i class="bi bi-pen me-1"></i>Подписать
+                <button class="btn-circle text-warning d-none" id="rollbackOrderBtn" type="button" title="Откатить" aria-label="Откатить">
+                    <i class="bi bi-arrow-counterclockwise"></i>
                 </button>
-                <button class="btn btn-dark" id="saveOrderPageBtn">
-                    <i class="bi bi-check2-circle me-1"></i>Сохранить приказ
+                <button class="btn-circle text-dark d-none" id="signOrderBtn" type="button" title="Подписать" aria-label="Подписать">
+                    <i class="bi bi-pen"></i>
+                </button>
+                <button class="btn-circle text-danger d-none" id="deleteOrderBtn" type="button" title="Удалить" aria-label="Удалить">
+                    <i class="bi bi-trash"></i>
+                </button>
+                <button class="btn-circle" id="saveOrderPageBtn" type="button" title="Сохранить приказ" aria-label="Сохранить приказ">
+                    <i class="bi bi-check2-circle"></i>
                 </button>
             </div>
         </div>
@@ -310,7 +316,7 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 <script src="/js/layout.js?v=20260420-01"></script>
-<script src="/js/app.js?v=20260422-99"></script>
+<script src="/js/app.js?v=20260425-101"></script>
 
 </body>
 </html>

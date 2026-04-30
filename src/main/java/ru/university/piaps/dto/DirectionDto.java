@@ -21,7 +21,7 @@ public class DirectionDto {
     @Pattern(regexp = "\\d{2}\\.\\d{2}\\.\\d{2}", message = "Код направления должен быть в формате 00.00.00")
     private String code;
     @NotBlank
-    @Size(min = 6, max = 80, message = "Название направления должно быть от 6 до 80 символов")
+    @Size(min = 2, max = 80, message = "Название направления должно быть от 2 до 80 символов")
     @Pattern(
             regexp = "^[\\p{L}\\-\\s]+$",
             message = "Название направления выглядит некорректно."

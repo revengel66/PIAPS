@@ -33,13 +33,13 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 64)
+    @Column(nullable = false, length = 40)
     private String lastName;
 
-    @Column(nullable = false, length = 64)
+    @Column(nullable = false, length = 40)
     private String firstName;
 
-    @Column(length = 64)
+    @Column(length = 40)
     private String middleName;
 
     @Column(nullable = false, unique = true, length = 32)

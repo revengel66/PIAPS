@@ -20,14 +20,8 @@ spring:
       mode: never
 
 app:
-  seed:
-    enabled: true
-    key: main-data-v1
-    script: classpath:data.sql
-
 logging:
-  file:
-    name: piaps.log
   level:
+    ru.university.piaps: info
     org.hibernate.SQL: warn
     org.springframework.web: info

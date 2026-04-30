@@ -266,8 +266,8 @@ public class FacultyServiceImpl implements FacultyService {
         if (normalizedName.isBlank()) {
             throw new BusinessValidationException("Укажите название факультета без слова «Факультет».");
         }
-        if (normalizedName.length() < 6 || normalizedName.length() > 80) {
-            throw new BusinessValidationException("Название факультета должно быть от 6 до 80 символов.");
+        if (normalizedName.length() < 2 || normalizedName.length() > 80) {
+            throw new BusinessValidationException("Название факультета должно быть от 2 до 80 символов.");
         }
         if (!ALLOWED_NAME_PATTERN.matcher(normalizedName).matches()) {
             throw new BusinessValidationException("Название факультета выглядит некорректно.");

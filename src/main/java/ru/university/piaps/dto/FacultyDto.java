@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class FacultyDto {
     private Long id;
     @NotBlank(message = "Название факультета обязательно")
-    @Size(min = 6, max = 80, message = "Название факультета должно быть от 6 до 80 символов")
+    @Size(min = 2, max = 80, message = "Название факультета должно быть от 2 до 80 символов")
     @Pattern(
             regexp = "^[A-Za-zА-Яа-яЁё\\-\\s]+$",
             message = "Название факультета выглядит некорректно."
