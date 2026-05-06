@@ -6077,13 +6077,6 @@
             'EXPULSION',
             'ENROLLMENT'
         ]);
-        const orderFormUiVersion = '20260425-102';
-        const buildOrderFormUrl = (orderId) => {
-            if (Number.isFinite(Number(orderId))) {
-                return `/order-form.html?id=${orderId}&ui=${orderFormUiVersion}`;
-            }
-            return `/order-form.html?ui=${orderFormUiVersion}`;
-        };
 
         const isExecutableOrder = (order) => executableTypes.has(String(order?.type || ''));
         const isExecutedOrder = (order) => order?.executed === true;
@@ -6112,9 +6105,9 @@
             ];
 
             if (!isExecutedOrder(order) && !isSignedOrder(order)) {
-                actions.push(`<a class="btn-circle" href="${buildOrderFormUrl(order.id)}" title="Редактировать"><i class="bi bi-pencil"></i></a>`);
+                actions.push(`<a class="btn-circle" href="/order-form.html?id=${order.id}" title="Редактировать"><i class="bi bi-pencil"></i></a>`);
             } else {
-                actions.push(`<a class="btn-circle" href="${buildOrderFormUrl(order.id)}" title="Просмотр"><i class="bi bi-eye"></i></a>`);
+                actions.push(`<a class="btn-circle" href="/order-form.html?id=${order.id}" title="Просмотр"><i class="bi bi-eye"></i></a>`);
             }
 
             if (isExecutableOrder(order) && !isExecutedOrder(order) && !isSignedOrder(order)) {
@@ -6358,9 +6351,7 @@
         const saveBtn = document.getElementById('saveOrderPageBtn');
         const printOrderBtn = document.getElementById('printOrderBtn');
         const executeOrderBtn = document.getElementById('executeOrderBtn');
-        const rollbackOrderBtn = document.getElementById('rollbackOrderBtn');
         const signOrderBtn = document.getElementById('signOrderBtn');
-        const deleteOrderBtn = document.getElementById('deleteOrderBtn');
         const selectedStudentsCountEl = document.getElementById('selectedStudentsCount');
         const selectedStudentsPreviewEl = document.getElementById('selectedStudentsPreview');
         const orderFormTitleEl = document.getElementById('orderFormTitle');
@@ -6478,54 +6469,58 @@
             }
         };
 
-        const enforceOrderActionButtonsIconOnly = () => {
-            const enforceIconOnlyButton = (button, iconClass, title) => {
-                if (!button) return;
-                button.innerHTML = `<i class="${iconClass}"></i>`;
-                button.setAttribute('title', title);
-                button.setAttribute('aria-label', title);
-            };
-            enforceIconOnlyButton(executeOrderBtn, 'bi bi-play-fill', 'Осуществить');
-            enforceIconOnlyButton(rollbackOrderBtn, 'bi bi-arrow-counterclockwise', 'Откатить');
-            enforceIconOnlyButton(signOrderBtn, 'bi bi-pen', 'Подписать');
-            enforceIconOnlyButton(deleteOrderBtn, 'bi bi-trash', 'Удалить');
-            enforceIconOnlyButton(saveBtn, 'bi bi-check2-circle', 'Сохранить приказ');
-        };
-
         const updateExecuteButtonState = (order, options = {}) => {
+            if (!executeOrderBtn) {
+                return;
+            }
             const assignId = options.assignId !== false;
             const hasId = assignId && Number.isFinite(Number(order?.id));
             const executableType = isExecutableOrderType(order?.type);
             const executed = Boolean(order?.executed);
             const signed = Boolean(order?.signed);
-            const canExecute = hasId && executableType && !executed && !signed;
-            const canRollback = hasId && executableType && executed && !signed;
-            const canSign = hasId && executableType && executed && !signed;
-            enforceOrderActionButtonsIconOnly();
+            const shouldShow = hasId && executableType;
+            setStudentEditingLocked(hasId && signed);
 
-            setStudentEditingLocked(hasId && (signed || executed));
-
-            if (executeOrderBtn) {
-                executeOrderBtn.classList.toggle('d-none', !canExecute);
-                executeOrderBtn.disabled = !canExecute;
-            }
-            if (rollbackOrderBtn) {
-                rollbackOrderBtn.classList.toggle('d-none', !canRollback);
-                rollbackOrderBtn.disabled = !canRollback;
-            }
+            executeOrderBtn.classList.toggle('d-none', !shouldShow);
             if (signOrderBtn) {
-                signOrderBtn.classList.toggle('d-none', !canSign);
-                signOrderBtn.disabled = !canSign;
+                signOrderBtn.classList.toggle('d-none', !(hasId && executed && !signed));
             }
-            if (deleteOrderBtn) {
-                deleteOrderBtn.classList.toggle('d-none', !hasId);
-                deleteOrderBtn.disabled = !hasId;
-            }
-            if (printOrderBtn) {
-                printOrderBtn.classList.toggle('d-none', !hasId);
+            if (!shouldShow) {
+                executeOrderBtn.disabled = true;
+                executeOrderBtn.innerHTML = '<i class="bi bi-play-fill me-1"></i>Осуществить';
+                executeOrderBtn.title = '';
+                if (signOrderBtn) {
+                    signOrderBtn.disabled = true;
+                }
+                saveBtn.disabled = false;
+                return;
             }
 
-            saveBtn.disabled = hasId && (executed || signed);
+            if (signed) {
+                executeOrderBtn.disabled = true;
+                executeOrderBtn.innerHTML = '<i class="bi bi-check2-all me-1"></i>Подписан';
+                executeOrderBtn.title = 'Приказ подписан и заблокирован';
+                if (signOrderBtn) {
+                    signOrderBtn.disabled = true;
+                }
+                saveBtn.disabled = true;
+            } else if (executed) {
+                executeOrderBtn.disabled = true;
+                executeOrderBtn.innerHTML = '<i class="bi bi-check2-circle me-1"></i>Осуществлён';
+                executeOrderBtn.title = 'Приказ уже осуществлён';
+                if (signOrderBtn) {
+                    signOrderBtn.disabled = false;
+                }
+                saveBtn.disabled = true;
+            } else {
+                executeOrderBtn.disabled = false;
+                executeOrderBtn.innerHTML = '<i class="bi bi-play-fill me-1"></i>Осуществить';
+                executeOrderBtn.title = '';
+                if (signOrderBtn) {
+                    signOrderBtn.disabled = true;
+                }
+                saveBtn.disabled = false;
+            }
         };
 
         const parseNumericInput = (value) => {
@@ -8731,20 +8726,12 @@
             const assignId = options.assignId !== false;
             const disableType = options.disableType === true;
             const isReadOnlyView = Boolean(order?.signed) || Boolean(order?.executed);
-            const hasOrderId = assignId && Number.isFinite(Number(order?.id));
 
             orderIdEl.value = assignId ? order.id : '';
             orderNumberEl.value = safeValue(order.number);
             setOrderDateValue(order.orderDate);
             orderTypeEl.value = order.type;
             orderTypeEl.disabled = disableType;
-            if (printOrderBtn) {
-                if (hasOrderId) {
-                    printOrderBtn.href = `/api/orders/${order.id}/pdf`;
-                } else {
-                    printOrderBtn.removeAttribute('href');
-                }
-            }
             if (orderFormTitleEl && assignId) {
                 orderFormTitleEl.textContent = getOrderFormTitle(order.type);
             }
@@ -9016,54 +9003,6 @@
             await fillOrderForm(updatedOrder, {disableType: true});
         };
 
-        const rollbackCurrentOrder = async () => {
-            const orderId = Number(orderIdEl.value);
-            if (!Number.isFinite(orderId)) {
-                toast('Сначала сохраните приказ.', 'danger');
-                return;
-            }
-
-            const confirmed = await confirmAction({
-                title: 'Откат приказа',
-                message: 'Откатить осуществлённый приказ и вернуть изменения студентов в исходное состояние?',
-                confirmText: 'Откатить',
-                confirmClass: 'btn-dark'
-            });
-            if (!confirmed) {
-                return;
-            }
-
-            await api(`/api/orders/${orderId}/rollback`, {method: 'POST'});
-            toast('Приказ откатан');
-            const updatedOrder = await api(`/api/orders/${orderId}`);
-            await fillOrderForm(updatedOrder, {disableType: true});
-        };
-
-        const deleteCurrentOrder = async () => {
-            const orderId = Number(orderIdEl.value);
-            if (!Number.isFinite(orderId)) {
-                toast('Сначала сохраните приказ.', 'danger');
-                return;
-            }
-
-            const order = await api(`/api/orders/${orderId}`);
-            const deleteMessage = (Boolean(order?.signed) || Boolean(order?.executed))
-                ? 'Удалить приказ? Приказ будет удалён, внесённые им изменения в данных студентов сохранятся.'
-                : 'Удалить приказ?';
-            const confirmed = await confirmAction({
-                title: 'Удаление приказа',
-                message: deleteMessage,
-                confirmText: 'Удалить'
-            });
-            if (!confirmed) {
-                return;
-            }
-
-            await api(`/api/orders/${orderId}`, {method: 'DELETE'});
-            toast('Приказ удалён');
-            window.location.href = '/orders.html';
-        };
-
         orderTypeEl.addEventListener('change', () => {
             syncOrderNumberWithOrderContext({clearSequenceOnConflict: true, showConflictHint: true});
             validateOrderNumberInput();
@@ -9255,23 +9194,12 @@
                 executeCurrentOrder().catch(err => toast(err.message, 'danger'));
             });
         }
-        if (rollbackOrderBtn) {
-            rollbackOrderBtn.addEventListener('click', () => {
-                rollbackCurrentOrder().catch(err => toast(err.message, 'danger'));
-            });
-        }
         if (signOrderBtn) {
             signOrderBtn.addEventListener('click', () => {
                 signCurrentOrder().catch(err => toast(err.message, 'danger'));
             });
         }
-        if (deleteOrderBtn) {
-            deleteOrderBtn.addEventListener('click', () => {
-                deleteCurrentOrder().catch(err => toast(err.message, 'danger'));
-            });
-        }
 
-        enforceOrderActionButtonsIconOnly();
         setOrderNumberHint(orderNumberDefaultHint, false);
         setOrderNumberPlaceholder();
         bindTextDatePicker(orderDateEl, orderDatePicker);
@@ -9283,6 +9211,8 @@
             renderSelectedStudents();
 
             if (orderIdFromPage) {
+                printOrderBtn.href = `/api/orders/${orderIdFromPage}/pdf`;
+                printOrderBtn.classList.remove('d-none');
                 const order = await api(`/api/orders/${orderIdFromPage}`);
                 await fillOrderForm(order, {disableType: true});
             } else {
